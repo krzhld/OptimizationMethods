@@ -65,3 +65,149 @@ general_problem_t getDualLinearProblem(general_problem_t &problem)
 	return dualProblem;
 }
 
+/*ѕроверка совпадени€ числа и одного из значений в сочетании*/
+bool IsNumberInBasis(int number, comb_t comb, int combSize)
+{
+	for (int i = 0; i < combSize; i++)
+	{
+		if (number == comb[i])
+			return true;
+	}
+	return false;
+}
+
+/*ѕоиск обратной матрицы методом √аусса*/
+matrix_t InverseMatrix(matrix_t A)
+{
+	int n = size(A);
+
+	column_t Ecolumn; // строка единичной матрицы
+	Ecolumn.resize(n);
+
+	matrix_t E; // инициализаци€ единичной матрицы
+	E.resize(n);
+	for (int i = 0; i < n; i++)
+	{
+		E[i] = Ecolumn;
+	}
+
+	double temp;
+	for (int i = 0; i < n; i++)
+	{
+		E[i][i] = 1;
+	}
+
+	for (int k = 0; k < n; k++)
+	{
+		temp = A[k][k];
+
+		for (int j = 0; j < n; j++)
+		{
+			A[k][j] /= temp;
+			E[k][j] /= temp;
+		}
+
+		for (int i = k + 1; i < n; i++)
+		{
+			temp = A[i][k];
+
+			for (int j = 0; j < n; j++)
+			{
+				A[i][j] -= A[k][j] * temp;
+				E[i][j] -= E[k][j] * temp;
+			}
+		}
+	}
+
+	for (int k = n - 1; k > 0; k--)
+	{
+		for (int i = k - 1; i >= 0; i--)
+		{
+			temp = A[i][k];
+
+			for (int j = 0; j < n; j++)
+			{
+				A[i][j] -= A[k][j] * temp;
+				E[i][j] -= E[k][j] * temp;
+			}
+		}
+	}
+
+	//преобразованна€ единична€ матрица €вл€етс€ обратной матрицей к матрице ј 
+	return E;
+}
+
+column_t MultipliedQuadMatrixAndColumn(matrix_t M, column_t c)
+{
+	int n = size(c);
+
+	column_t X; ///результат перемножени€
+	X.resize(n);
+
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			X[i] += M[i][j] * c[j];
+		}
+	}
+
+	return X;
+}
+
+/*¬осстановление решени€ двойственной задачи из решени€ пр€мой задачи*/
+column_t SolvingDualProblem(canon_problem_t problem, column_t X, comb_t optBasis)
+{
+	matrix_t A; 
+	column_t b, c;
+	tie(A, b, c) = problem;
+
+	int n = size(c);
+	int m = size(b);
+
+	column_t Y; // решение двойственной задачи 
+
+	column_t columnBasis; // столбец базиса
+	columnBasis.resize(m);
+
+	matrix_t basis; //базис оптимального решени€ 
+	basis.resize(m);
+
+	for (int i = 0; i < m; i++)
+	{
+		basis[i] = columnBasis;
+	}
+
+	column_t cB; // вектор компонент целевой функцию, соответствующий базису оптимального решени€
+	cB.resize(m);
+
+	int numb = 0; //счетчик
+
+	for (int i = 0; i < n; i++)
+	{
+		if (IsNumberInBasis(i + 1, optBasis, m))
+		{
+			for (int j = 0; j < m; j++)
+			{
+				basis[numb][j] = A[i][j];
+			}
+			cB[numb] = c[i];
+			numb++;
+		}
+	}
+
+	matrix_t invBasis = InverseMatrix(basis); // инвертируем матрицу базиса
+
+	Y = MultipliedQuadMatrixAndColumn(invBasis, cB); 
+
+	double result = 0;
+	for (int i = 0; i < size(Y); i++)
+	{
+		result += Y[i] * b[i];
+	}
+
+	printf("\n %lf \n", result);
+
+	return Y;
+
+}

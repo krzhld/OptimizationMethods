@@ -7,9 +7,9 @@
 #include "types.h"
 
 
-typedef std::pair<column_t, double> solving_t;
 typedef std::vector<int> comb_t;
 typedef std::vector<comb_t> combinations_t;
+typedef std::tuple<column_t, double, comb_t> solving_t;
 
 /*
 Решение задачи методом перебора крайних точек
@@ -18,3 +18,10 @@ typedef std::vector<comb_t> combinations_t;
 и число (значение функции цели для вектора, в котором достигается оптимальное решение)
 */
 solving_t IteratingThroughExtremePoints(canon_problem_t &problem);
+
+/*
+* Нахождение ранга матрицы
+* вход: матрица и ее размеры
+* выход: целое число
+*/
+int RankMatrix(matrix_t matrix, int N, int M);
