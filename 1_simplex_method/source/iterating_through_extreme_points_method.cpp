@@ -2,6 +2,38 @@
 
 using namespace std;
 
+/*Нахождение ранга матрицы*/
+int RankMatrix(matrix_t A, int N, int M)
+{
+	double temp;
+	int rank = M;
+	double sum=0;
+	for (int i = 0; i < N - M; i++)
+	{
+		temp = A[i][i];
+		for (int j = i + 1; j < M; j++)
+		{
+			for (int k = 0; k < N; k++)
+			{
+				A[k][j] = A[k][j] - A[i][j] / temp;
+			}
+		}
+		
+	}
+	for (int i = 0; i < M; i++)
+	{
+		double sum = 0;
+		for (int j = 0; j < N; j++)
+		{
+			sum += A[j][i];
+		}
+		if (sum == 0)
+		{
+			rank--;
+		}
+	}
+	return rank;
+}
 
 /*Метод вращений решения СЛАУ*/
 column_t RotationMethod(matrix_t A, column_t b)
@@ -235,7 +267,10 @@ solving_t IteratingThroughExtremePoints(canon_problem_t &problem)
 
 	column_t maxPoint; // вектор, в котором достигается оптимальное решение
 	maxPoint.resize(n);
-	double max = -1e20; // минимальное значение функции цели
+	double max = -1e20; // максимальное значение функции цели
+	comb_t optComb; // базисная комбинация, при которой достигается оптимальное решение
+	optComb.resize(m);
+
 
 	/*перебор всех возможных комбинаций сочетаний*/
 	for (auto& comb : combinations)
@@ -257,6 +292,7 @@ solving_t IteratingThroughExtremePoints(canon_problem_t &problem)
 
 		column_t solveSystem; //решение СЛАУ с матрицей A1 и вектором b, имеет размерность 
 		solveSystem.resize(m);
+
 
 		int numb = 0; // счетсчик для задания компонент матрицы A1
 
@@ -311,6 +347,7 @@ solving_t IteratingThroughExtremePoints(canon_problem_t &problem)
 				{
 					maxPoint = X;
 					max = valueInPoint;
+					optComb = comb;
 				}
 					
 				
@@ -321,6 +358,6 @@ solving_t IteratingThroughExtremePoints(canon_problem_t &problem)
 		
 	}
 	/*создание кортежа из вектора, в котором достигается оптимальное решение и оптимального решения*/
-	solving_t solving = make_pair(maxPoint, max);
+	solving_t solving = make_tuple(maxPoint, max, optComb);
 	return solving;
 }
