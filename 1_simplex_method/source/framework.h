@@ -63,6 +63,13 @@ bool IsNumberInCombination(int number, comb_t comb);
 */
 bool NonNegativityOfVector(column_t v);
 
+/*
+* Проверка неположительности компонент вектора
+* вход: вектор
+* выход: булево значение
+*/
+bool NonPositivityOfVector(column_t v);
+
 /* 
 * Перемножение матрицы на вектор
 * вход: квадратная матрица и подходящий по размеру вектор
@@ -75,7 +82,7 @@ column_t MultipliedMatrixAndColumn(matrix_t M, column_t c);
 * вход: матрица
 * выход: ранг матрицы - целое число
 */
-int RankMatrix(matrix_t A);
+//int RankMatrix(matrix_t A);
 
 /*
 * Получение обратной матрицы методом Гаусса
@@ -178,18 +185,32 @@ column_t SolvingDualProblem(canon_problem_t problem, column_t X, comb_t optBasis
 * вход:
 * выход:
 */
-void GetCurMatrix(matrix_t& A, matrix_t& cur_matrix, comb_t cur_columns);
+void GetCurMatrix(matrix_t& A, matrix_t& cur_matrix, comb_t& cur_columns);
+
+/**/
+void CalculateNextSupportVector(comb_t& Nk_indexes, comb_t& Nk_plus_indexes, column_t& u_k, column_t& cur_X, int N_number, int j_k);
+
+/**/
+comb_t GetIndexesPositiveUk(comb_t& Nk_plus_indexes, column_t& u_k);
+
+/**/
+void GetLk(comb_t& Lk_indexes, comb_t& Nk_indexes, int N);
+
+/**/
+SimplexState IterSimplex(matrix_t& main_A, int M_number, comb_t& Nk_indexes, column_t& main_C, column_t& cur_X, column_t& cur_Y);
 
 /*
 * Реализация симплекс метода
 * вход: кортеж матриц и столбцов канонической ЗЛП
 * выход: вектор, сообщающий МИНИМУМ функции цели
 */
-double SimplexMethod(canon_problem_t& problem, column_t& cur_X);
+std::tuple<double, column_t, column_t, comb_t> SimplexMethod(canon_problem_t& problem, column_t& cur_X, comb_t& basis);
 
 /*
 * Нахождение начального приближения для решения исходной канонической ЗЛП симплекс-методом
 * вход: кортеж матриц и столбцов канонической ЗЛП
 * выход: допустимый вектор для старта симплекс-метода для исходной задачи
 */
-column_t GetInitialApprox(canon_problem_t& problem);
+std::tuple<column_t, comb_t> GetInitialApprox(canon_problem_t& problem);
+
+std::tuple<double, column_t, column_t, matrix_t> SolveProblemWithSimplexMethod(canon_problem_t& problem);
