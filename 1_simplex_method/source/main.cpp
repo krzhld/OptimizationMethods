@@ -1,10 +1,12 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "framework.h"
+#include<windows.h>
 
 using namespace std;
 
 int main(void) {
-	setlocale(0, "");
+	setlocale(LC_ALL, "Russian");
+	SetConsoleOutputCP(866);
 
 	general_problem_t problem = FromFileConvertToGeneral("general_task_main.txt");
 	canon_problem_t canon_problem = ConvertGeneralToCanon(problem);
