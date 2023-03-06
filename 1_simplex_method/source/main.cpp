@@ -8,7 +8,7 @@ int main(void) {
 	setlocale(LC_ALL, "Russian");
 	SetConsoleOutputCP(866);
 
-	general_problem_t problem = FromFileConvertToGeneral("general_task_main.txt");
+	general_problem_t problem = FromFileConvertToGeneral("general_task_inet.txt");
 	canon_problem_t canon_problem = ConvertGeneralToCanon(problem);
 
 

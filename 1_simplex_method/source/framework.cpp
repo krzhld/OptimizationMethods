@@ -736,6 +736,12 @@ void CalculateNextSupportVector(comb_t& Nk_indexes, comb_t& Nk_plus_indexes, col
 			break;
 		}
 	}
+	// обновляем Nk_plus_indexes
+	Nk_plus_indexes.clear();
+	for (int i = 0; i < cur_X.size(); ++i) {
+		if (cur_X[i] > 0)
+			Nk_plus_indexes.push_back(i + 1);
+	}
 }
 
 comb_t GetIndexesPositiveUk(comb_t& Nk_plus_indexes, column_t& u_k) {
@@ -762,6 +768,13 @@ comb_t GetDifferenceSets(comb_t& A, comb_t& B) {
 	return res;
 }
 
+void GetNkPlus(comb_t& Nk_plus_indexes, column_t& cur_X) {
+	Nk_plus_indexes.clear();
+	for (int i = 0; i < cur_X.size(); ++i)
+		if (cur_X[i] > 0)
+			Nk_plus_indexes.push_back(i + 1);
+}
+
 // Nk_indexes - индексы базисных столбцов
 SimplexState IterSimplex(matrix_t& main_A, int M_number, comb_t& Nk_indexes, column_t& main_C, column_t& cur_X, column_t& cur_Y) {
 	// инициализация буферной матрицы для нахождения опорного вектора
@@ -773,9 +786,7 @@ SimplexState IterSimplex(matrix_t& main_A, int M_number, comb_t& Nk_indexes, col
 
 	// формируем набор индексов N+ 
 	vector<int> Nk_plus_indexes;
-	for (int i = 0; i < N_number; ++i)
-		if (cur_X[i] > 0)
-			Nk_plus_indexes.push_back(i + 1);
+	GetNkPlus(Nk_plus_indexes, cur_X);
 
 	bool is_cur_X_singular = true;
 
@@ -841,11 +852,11 @@ SimplexState IterSimplex(matrix_t& main_A, int M_number, comb_t& Nk_indexes, col
 	// и решим СЛАУ методом вращения
 	cur_Y = RotationMethod(A_M_Nk, C_Nk);
 
-	// Найдем обратную к A[M][Nk] матрицу B[Nk][M]
-	matrix_t B_Nk_M = InverseMatrix(A_M_Nk);
-
 	// вернем матрицу к исходному состоянию
 	TransposeQuadMatrix(A_M_Nk);
+
+	// Найдем обратную к A[M][Nk] матрицу B[Nk][M]
+	matrix_t B_Nk_M = InverseMatrix(A_M_Nk);
 
 	// сформируем массив индексов L_k 
 	comb_t L_k;
@@ -914,7 +925,7 @@ SimplexState IterSimplex(matrix_t& main_A, int M_number, comb_t& Nk_indexes, col
 	if (is_cur_X_singular == true) {
 		/* если вырожденный, то рассматриваем два случая */
 		// если u_k[Nk \ Nk+] <= 0,то считаем \theta
-		comb_t u_k_positive_indexes = GetIndexesPositiveUk(Nk_plus_indexes, u_k);
+		comb_t u_k_positive_indexes = GetIndexesPositiveUk(Nk_indexes, u_k);
 
 		if (u_k_positive_indexes.size() == 0) {
 			CalculateNextSupportVector(Nk_indexes, Nk_plus_indexes, u_k, cur_X, N_number, j_k);
@@ -929,6 +940,7 @@ SimplexState IterSimplex(matrix_t& main_A, int M_number, comb_t& Nk_indexes, col
 			// иначе меняем базис
 			matrix_t current_main_matrix;
 			matrix_t current_sub_matrix;
+			GetNkPlus(Nk_plus_indexes, cur_X);
 			comb_t Nk_minus_Nk_plus = GetDifferenceSets(Nk_indexes, Nk_plus_indexes);
 			for (auto temp_i : Nk_minus_Nk_plus) {
 				for (auto temp_j : L_k) {
