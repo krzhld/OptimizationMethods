@@ -429,6 +429,7 @@ general_problem_t FromFileConvertToGeneral(string filename) {
 			++i;
 		}
 	}
+	
 	// очищаем вспомогательные векторы/матрицы
 	N1_vec.clear();
 	iterator.clear();
@@ -649,6 +650,7 @@ solution_t IteratingThroughExtremePoints(canon_problem_t& problem) {
 	}
 	/*создание кортежа из вектора, в котором достигается оптимальное решение и оптимального решения*/
 	solution_t solving = make_tuple(maxPoint, max, optComb);
+
 	return solving;
 }
 
@@ -693,8 +695,6 @@ column_t SolvingDualProblem(canon_problem_t problem, column_t X, comb_t optBasis
 	double result = 0;
 	for (int i = 0; i < size(Y); i++)
 		result += Y[i] * b[i];
-
-	cout << endl << " " << result << " " << endl;
 
 	return Y;
 }
