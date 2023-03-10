@@ -3,12 +3,15 @@
 
 int main()
 {
+	setlocale(LC_ALL, "Russian");
+
 	transport_problem_t problem = ReadFromFileTransportProblem("task.txt");
 
 	matrix_t c;
 	column_t b, a;
 	tie(a, b, c) = problem;
 
+	printf("Ìàòðèöà òàðèôîâ:\n");
 	for (int i = 0; i < size(a); i++)
 	{
 		for (int j = 0; j < size(b); j++)
@@ -17,13 +20,13 @@ int main()
 		}
 		printf("\n");
 	}
-	printf("\n");
+	printf("\nÑòîëáåö ïîñòàâùèêîâ:\n");
 	for (int j = 0; j < size(a); j++)
 	{
 		printf("%lf\n", a[j]);
 
 	}
-	printf("\n");
+	printf("\nÑòîëáåö ïîòðåáèòåëåé:\n");
 	for (int j = 0; j < size(b); j++)
 	{
 		printf("%lf\n", b[j]);
@@ -36,6 +39,7 @@ int main()
 	double result;
 	tie(X, result) = solving;
 
+	printf("Íàéäåííîå îïòèìàëüíîå ðåøåíèå:\n");
 	for (int i = 0; i < size(a); i++)
 	{
 		for (int j = 0; j < size(b); j++)
@@ -45,8 +49,8 @@ int main()
 		printf("\n");
 	}
 	printf("\n");
-
-	printf("\n%lf\n", result);
+	printf("Ìèíèìàëüíûå çàòðàòû íà ïåðåâîçêó:\n");
+	printf("%lf\n", result);
 	return 0;
 
 }
