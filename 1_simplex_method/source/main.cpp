@@ -19,7 +19,6 @@ int main(void) {
 	SetConsoleOutputCP(866);
 
 
-
 	// ÇÀÏÈÑÜ ÇÀÄÀ×È Â ÎÁÙÅÌ ÂÈÄÅ
 	general_problem_t problem = FromFileConvertToGeneral("general_task_main.txt");
 	matrix_t A; column_t b, c; int M1, N1;
@@ -66,6 +65,7 @@ int main(void) {
 
 
 
+	/*
 	// ÏÎËÓ×ÈËÈ ĞÅØÅÍÈÅ ÏĞßÌÎÉ ÇÀÄÀ×È ÌÅÒÎÄÎÌ ÏÅĞÅÁÎĞÀ ÊĞÀÉÍÈÕ ÒÎ×ÅÊ
 	column_t Xtreme;
 	double res;
@@ -131,11 +131,13 @@ int main(void) {
 	cout << endl;
 
 
+	*/
 
-	/*column_t X, Y;
+
+	column_t X, Y;
 	double opt_value;
 	matrix_t basis;
-	tie(opt_value, X, Y, basis) = SolveProblemWithSimplexMethod(canon_problem);*/
+	tie(opt_value, X, Y, basis) = SolveProblemWithSimplexMethod(canon_problem);
 
 	/*cout << "Îïòèìàëüíîå çíà÷åíèå ôóíêöèè öåëè: " << opt_value << endl;
 	cout << "Îïòèìàëüíûé âåêòîğ: " << endl;

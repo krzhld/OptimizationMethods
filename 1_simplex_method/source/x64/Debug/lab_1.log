@@ -1,30 +1,3 @@
 ﻿  framework.cpp
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(71,17): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(84,18): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(85,21): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(107,17): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(156,18): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(191,17): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(229,23): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(308,22): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(366,21): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(411,25): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(420,25): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(449,33): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(463,23): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(473,22): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(474,25): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(526,17): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(526,30): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(622,17): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(623,17): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(666,27): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(693,18): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(755,26): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(756,29): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(790,30): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(791,30): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(800,2): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-  main.cpp
-  Создание кода...
+C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(973): warning C4715: IterSimplex: значение возвращается не при всех путях выполнения
   lab_1.vcxproj -> C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\x64\Debug\lab_1.exe

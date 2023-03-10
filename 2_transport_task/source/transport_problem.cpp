@@ -85,7 +85,6 @@ transport_problem_t ReadFromFileTransportProblem(string filename)
 void NorthWestCornerMethod(column_t a, column_t b, int N, int M, matrix_t &X)
 {
 	int i = 0, j = 0;
-	bool flag;
 	while ((i < N) || (j < M))
 	{
 		if (a[i] <= b[j]) //если количество товара у i-го поставщика меньше запроса j-го потребителя
