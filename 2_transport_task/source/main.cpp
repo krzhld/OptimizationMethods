@@ -11,7 +11,7 @@ int main()
 	column_t b, a;
 	tie(a, b, c) = problem;
 
-	printf("Матрица тарифов:\n");
+	printf("ГЊГ ГІГ°ГЁГ¶Г  ГІГ Г°ГЁГґГ®Гў:\n");
 	for (int i = 0; i < size(a); i++)
 	{
 		for (int j = 0; j < size(b); j++)
@@ -20,13 +20,13 @@ int main()
 		}
 		printf("\n");
 	}
-	printf("\nСтолбец поставщиков:\n");
+	printf("\nГ‘ГІГ®Г«ГЎГҐГ¶ ГЇГ®Г±ГІГ ГўГ№ГЁГЄГ®Гў:\n");
 	for (int j = 0; j < size(a); j++)
 	{
 		printf("%lf\n", a[j]);
 
 	}
-	printf("\nСтолбец потребителей:\n");
+	printf("\nГ‘ГІГ®Г«ГЎГҐГ¶ ГЇГ®ГІГ°ГҐГЎГЁГІГҐГ«ГҐГ©:\n");
 	for (int j = 0; j < size(b); j++)
 	{
 		printf("%lf\n", b[j]);
@@ -39,7 +39,7 @@ int main()
 	double result;
 	tie(X, result) = solving;
 
-	printf("Найденное оптимальное решение:\n");
+	printf("ГЌГ Г©Г¤ГҐГ­Г­Г®ГҐ Г®ГЇГІГЁГ¬Г Г«ГјГ­Г®ГҐ Г°ГҐГёГҐГ­ГЁГҐ:\n");
 	for (int i = 0; i < size(a); i++)
 	{
 		for (int j = 0; j < size(b); j++)
@@ -49,7 +49,7 @@ int main()
 		printf("\n");
 	}
 	printf("\n");
-	printf("Минимальные затраты на перевозку:\n");
+	printf("ГЊГЁГ­ГЁГ¬Г Г«ГјГ­Г»ГҐ Г§Г ГІГ°Г ГІГ» Г­Г  ГЇГҐГ°ГҐГўГ®Г§ГЄГі:\n");
 	printf("%lf\n", result);
 	return 0;
 
