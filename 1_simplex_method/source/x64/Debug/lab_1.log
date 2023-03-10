@@ -1,3 +1,0 @@
-﻿  framework.cpp
-C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\framework.cpp(973): warning C4715: IterSimplex: значение возвращается не при всех путях выполнения
-  lab_1.vcxproj -> C:\Users\krzhld\GitProjects\OptimizationMethods\1_simplex_method\source\x64\Debug\lab_1.exe
