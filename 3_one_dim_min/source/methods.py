@@ -1,13 +1,12 @@
-import matplotlib.pyplot as plt
-import numpy as np
 import math
 
 
 def golden_section_method(func, a, b, eps):
     alpha = (3 - 5 ** 0.5) / 2
+    n_eps = 2 * (1 + (math.log(eps) - math.log(b - a)) / math.log(1 - alpha))
+    n_eps = math.floor(n_eps)
     n = 0
-    # n_eps = (math.log(eps)-math.log(b-a)) / math.log(1-alpha)
-    # print(n_eps)
+    print(f'predictive n: {n_eps}')
     while True:
         if abs(b - a) < eps:
             return (a + b) / 2, n
@@ -23,9 +22,10 @@ def golden_section_method(func, a, b, eps):
 
 
 def dichotomy_method(func, a, b, eps):
+    n_eps = 2 * (math.log(eps) - math.log(b - a)) / math.log(0.5)
+    n_eps = math.floor(n_eps)
     n = 0
-    # n_eps = (math.log(eps) - math.log(b - a)) / math.log(0.501)
-    # print(n_eps)
+    print(f'predictive n: {n_eps}')
     while True:
         if abs(b - a) < eps:
             return (a + b) / 2, n
@@ -42,9 +42,10 @@ def dichotomy_method(func, a, b, eps):
 
 
 def trial_points_method(func, a, b, eps):
+    n_eps = 2 * math.log(eps / (b - a)) / math.log(0.5)
+    n_eps = math.floor(n_eps)
+    print(f'predictive n: {n_eps}')
     n = 0
-    # n_eps = ...
-    # print(n_eps)
     while True:
         if abs(b - a) < eps:
             return (a + b) / 2, n

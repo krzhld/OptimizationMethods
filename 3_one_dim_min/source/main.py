@@ -15,14 +15,17 @@ eps = 0.0001
 answer_golden_section, n_golden_section = methods.golden_section_method(f, a, b, eps)
 print('golden section method')
 print(f'answer: {answer_golden_section}, n: {n_golden_section}')
+print()
 
 answer_dichotomy, n_dichotomy = methods.dichotomy_method(f, a, b, eps)
 print('dichotomy method')
 print(f'answer: {answer_dichotomy}, n: {n_dichotomy}')
+print()
 
 answer_trial_points, n_trial_points = methods.trial_points_method(f, a, b, eps)
 print('trial points method')
 print(f'answer: {answer_trial_points}, n: {n_trial_points}')
+print()
 
 x = np.linspace(a, b, 100)
 y = f(x)
@@ -52,4 +55,4 @@ plt.xlabel('x-axis')
 plt.ylabel('y-axis')
 plt.grid()
 
-plt.show()
+# plt.show()
