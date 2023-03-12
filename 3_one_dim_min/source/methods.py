@@ -10,7 +10,7 @@ def golden_section_method(func, a, b, eps):
     # print(n_eps)
     while True:
         if abs(b - a) < eps:
-            return (a + b) / 2, n
+            return (a + b) / 2, n, a, b
         x_1 = a + alpha * (b - a)
         x_2 = b - alpha * (b - a)
         func_x_1 = func(x_1)
@@ -28,7 +28,7 @@ def dichotomy_method(func, a, b, eps):
     # print(n_eps)
     while True:
         if abs(b - a) < eps:
-            return (a + b) / 2, n
+            return (a + b) / 2, n, a, b
         delta = (b - a) * 0.001
         x_1 = (a + b) / 2 - delta
         x_2 = (a + b) / 2 + delta
@@ -47,7 +47,7 @@ def trial_points_method(func, a, b, eps):
     # print(n_eps)
     while True:
         if abs(b - a) < eps:
-            return (a + b) / 2, n
+            return (a + b) / 2, n, a,b
         quarter = (b - a) / 4
         x_1 = a + quarter
         x_2 = x_1 + quarter
