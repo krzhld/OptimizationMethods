@@ -3,8 +3,9 @@ import math
 
 def golden_section_method(func, a, b, eps):
     alpha = (3 - 5 ** 0.5) / 2
-    n_eps = 2 * (1 + (math.log(eps) - math.log(b - a)) / math.log(1 - alpha))
-    n_eps = math.floor(n_eps)
+    n_eps = 2 * (math.log(eps) - math.log(b - a)) / math.log(1 - alpha)
+    n_eps = math.ceil(n_eps)
+    n_eps += (n_eps % 2)
     n = 0
     print(f'predictive n: {n_eps}')
     while True:
@@ -22,8 +23,9 @@ def golden_section_method(func, a, b, eps):
 
 
 def dichotomy_method(func, a, b, eps):
-    n_eps = 2 * (math.log(eps) - math.log(b - a)) / math.log(0.5)
-    n_eps = math.floor(n_eps)
+    n_eps = 2 * (math.log(eps) - math.log(b - a)) / math.log(0.501)
+    n_eps = math.ceil(n_eps)
+    n_eps += (n_eps % 2)
     n = 0
     print(f'predictive n: {n_eps}')
     while True:
@@ -42,13 +44,18 @@ def dichotomy_method(func, a, b, eps):
 
 
 def trial_points_method(func, a, b, eps):
-    n_eps = 2 * math.log(eps / (b - a)) / math.log(0.5)
-    n_eps = math.floor(n_eps)
-    print(f'predictive n: {n_eps}')
+    n_eps_min = 2 * (math.log(eps) - math.log(b - a)) / math.log(0.5)
+    n_eps_min = math.ceil(n_eps_min)
+    n_eps_min += (n_eps_min % 2)
+    n_eps_max = 3 * (math.log(eps) - math.log(b - a)) / math.log(0.5)
+    n_eps_max = math.ceil(n_eps_max)
+    while n_eps_max % 3 != 0:
+        n_eps_max += 1
+    print(f'predictive n belongs [{n_eps_min}, {n_eps_max}]')
     n = 0
     while True:
         if abs(b - a) < eps:
-            return (a + b) / 2, n, a,b
+            return (a + b) / 2, n, a, b
         quarter = (b - a) / 4
         x_1 = a + quarter
         x_2 = x_1 + quarter
