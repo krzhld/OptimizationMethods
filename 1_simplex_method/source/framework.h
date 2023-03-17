@@ -2,6 +2,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 
+#include <algorithm>
 #include <vector>
 #include <cstdio>
 #include <iostream>

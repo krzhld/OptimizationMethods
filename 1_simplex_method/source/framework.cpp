@@ -736,6 +736,7 @@ void CalculateNextSupportVector(comb_t& Nk_indexes, comb_t& Nk_plus_indexes, col
 			break;
 		}
 	}
+	sort(Nk_indexes.begin(), Nk_indexes.end());
 	// обновляем Nk_plus_indexes
 	Nk_plus_indexes.clear();
 	for (int i = 0; i < cur_X.size(); ++i) {
@@ -959,6 +960,7 @@ SimplexState IterSimplex(matrix_t& main_A, int M_number, comb_t& Nk_indexes, col
 								break;
 
 						Nk_indexes[index] = temp_j;
+						sort(Nk_indexes.begin(), Nk_indexes.end());
 						return SimplexState::NEXT;
 					}
 					else // если нет, то надеемся что найдем (возможно зацикливание)
@@ -1088,7 +1090,7 @@ tuple<column_t, comb_t> GetInitialApprox(canon_problem_t& problem) {
 tuple<double, column_t, column_t, matrix_t> SolveProblemWithSimplexMethod(canon_problem_t& problem) {
 	column_t X;
 	comb_t basis;
-	tie(X, basis) = GetInitialApprox(problem);
+ 	tie(X, basis) = GetInitialApprox(problem);
 
 	double opt_value; 
 	column_t Y;

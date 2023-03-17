@@ -11,7 +11,7 @@ int main()
 	column_t b, a;
 	tie(a, b, c) = problem;
 
-	printf("Ìàòðèöà òàðèôîâ:\n");
+	printf("������� �������:\n");
 	for (int i = 0; i < size(a); i++)
 	{
 		for (int j = 0; j < size(b); j++)
@@ -20,13 +20,13 @@ int main()
 		}
 		printf("\n");
 	}
-	printf("\nÑòîëáåö ïîñòàâùèêîâ:\n");
+	printf("\nNoieaao iinoaaueeia:\n");
 	for (int j = 0; j < size(a); j++)
 	{
 		printf("%lf\n", a[j]);
 
 	}
-	printf("\nÑòîëáåö ïîòðåáèòåëåé:\n");
+	printf("\nNoieaao iio?aaeoaeae:\n");
 	for (int j = 0; j < size(b); j++)
 	{
 		printf("%lf\n", b[j]);
@@ -39,7 +39,7 @@ int main()
 	double result;
 	tie(X, result) = solving;
 
-	printf("Íàéäåííîå îïòèìàëüíîå ðåøåíèå:\n");
+	printf("Iaeaaiiia iioeiaeuiia ?aoaiea:\n");
 	for (int i = 0; i < size(a); i++)
 	{
 		for (int j = 0; j < size(b); j++)
@@ -49,7 +49,7 @@ int main()
 		printf("\n");
 	}
 	printf("\n");
-	printf("Ìèíèìàëüíûå çàòðàòû íà ïåðåâîçêó:\n");
+	printf("Ieieiaeuiua cao?aou ia ia?aaiceo:\n");
 	printf("%lf\n", result);
 	return 0;
 
