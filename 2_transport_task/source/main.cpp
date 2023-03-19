@@ -13,7 +13,7 @@ int main()
 
 	canon_problem_t canonProblem = GetCanonProblemFromTransportProblem(problem);
 
-	printf("Матрица тарифов:\n");
+	printf("РњР°С‚СЂРёС†Р° С‚Р°СЂРёС„РѕРІ:\n");
 	for (int i = 0; i < size(a); i++)
 	{
 		for (int j = 0; j < size(b); j++)
@@ -22,13 +22,13 @@ int main()
 		}
 		printf("\n");
 	}
-	printf("\nСтолбец поставщиков:\n");
+	printf("\nРЎС‚РѕР»Р±РµС† РїРѕСЃС‚Р°РІС‰РёРєРѕРІ:\n");
 	for (int j = 0; j < size(a); j++)
 	{
 		printf("%lf\n", a[j]);
 
 	}
-	printf("\nСтолбец покупателей:\n");
+	printf("\nРЎС‚РѕР»Р±РµС† РїРѕРєСѓРїР°С‚РµР»РµР№:\n");
 	for (int j = 0; j < size(b); j++)
 	{
 		printf("%lf\n", b[j]);
@@ -41,7 +41,7 @@ int main()
 	double result;
 	tie(X, result) = solving;
 
-	printf("Найденное оптимальное решение:\n");
+	printf("РќР°Р№РґРµРЅРЅРѕРµ РѕРїС‚РёРјР°Р»СЊРЅРѕРµ СЂРµС€РµРЅРёРµ:\n");
 	for (int i = 0; i < size(a); i++)
 	{
 		for (int j = 0; j < size(b); j++)
@@ -51,12 +51,12 @@ int main()
 		printf("\n");
 	}
 	printf("\n");
-	printf("Минимальные затраты на перевозку:\n");
+	printf("РњРёРЅРёРјР°Р»СЊРЅС‹Рµ Р·Р°С‚СЂР°С‚С‹ РЅР° РїРµСЂРµРІРѕР·РєСѓ:\n");
 	printf("%lf\n", result);
 
 
-	printf("\nРешение задачи в случае недопоставки с учетом штрафов\n");
-	printf("\nПервый случай\n");
+	printf("\nР РµС€РµРЅРёРµ Р·Р°РґР°С‡Рё РІ СЃР»СѓС‡Р°Рµ РЅРµРґРѕРїРѕСЃС‚Р°РІРєРё СЃ СѓС‡РµС‚РѕРј С€С‚СЂР°С„РѕРІ\n");
+	printf("\nРџРµСЂРІС‹Р№ СЃР»СѓС‡Р°Р№\n");
 	transport_problem_t problem_with_imbalance_1 = ReadFromFileTransportProblem("task_with_imbalance_1.txt");
 
 	matrix_t c_ib1;
@@ -66,7 +66,7 @@ int main()
 	double imbalance1 = SumColumn(b_ib1) - SumColumn(a_ib1);
 
 	
-	printf("Матрица тарифов:\n");
+	printf("РњР°С‚СЂРёС†Р° С‚Р°СЂРёС„РѕРІ:\n");
 	for (int i = 0; i < size(a_ib1); i++)
 	{
 		for (int j = 0; j < size(b_ib1); j++)
@@ -75,20 +75,20 @@ int main()
 		}
 		printf("\n");
 	}
-	printf("\nСтолбец поставщиков:\n");
+	printf("\nРЎС‚РѕР»Р±РµС† РїРѕСЃС‚Р°РІС‰РёРєРѕРІ:\n");
 	for (int j = 0; j < size(a_ib1); j++)
 	{
 		printf("%lf\n", a_ib1[j]);
 
 	}
-	printf("\nСтолбец покупателей:\n");
+	printf("\nРЎС‚РѕР»Р±РµС† РїРѕРєСѓРїР°С‚РµР»РµР№:\n");
 	for (int j = 0; j < size(b_ib1); j++)
 	{
 		printf("%lf\n", b_ib1[j]);
 
 	}
 	printf("\n");
-	printf("\nМера штрафов потребителей:\n");
+	printf("\nРњРµСЂР° С€С‚СЂР°С„РѕРІ РїРѕС‚СЂРµР±РёС‚РµР»РµР№:\n");
 	for (int j = 0; j < size(f_ib1); j++)
 	{
 		printf("%lf\n", f_ib1[j]);
@@ -96,7 +96,7 @@ int main()
 	}
 	printf("\n");
 
-	printf("Дизбаланс:\n");
+	printf("Р”РёР·Р±Р°Р»Р°РЅСЃ:\n");
 	printf("%lf\n", imbalance1);
 
 	solving_t solving_ib1 = SolveTransportProblem(problem_with_imbalance_1);
@@ -106,7 +106,7 @@ int main()
 
 	double fine1 = result_ib1 - FindCost(c_ib1, X_ib1, size(a_ib1), size(b_ib1));
 
-	printf("Найденное оптимальное решение с учетом дизбаланса:\n");
+	printf("РќР°Р№РґРµРЅРЅРѕРµ РѕРїС‚РёРјР°Р»СЊРЅРѕРµ СЂРµС€РµРЅРёРµ СЃ СѓС‡РµС‚РѕРј РґРёР·Р±Р°Р»Р°РЅСЃР°:\n");
 	for (int i = 0; i < size(a_ib1); i++)
 	{
 		for (int j = 0; j < size(b_ib1); j++)
@@ -116,13 +116,13 @@ int main()
 		printf("\n");
 	}
 	printf("\n");
-	printf("Минимальные затраты на перевозку с учетом штрафов:\n");
+	printf("РњРёРЅРёРјР°Р»СЊРЅС‹Рµ Р·Р°С‚СЂР°С‚С‹ РЅР° РїРµСЂРµРІРѕР·РєСѓ СЃ СѓС‡РµС‚РѕРј С€С‚СЂР°С„РѕРІ:\n");
 	printf("%lf\n", result_ib1);
-	printf("Штраф:\n");
+	printf("РЁС‚СЂР°С„:\n");
 	printf("%lf\n", fine1);
 
 
-	printf("\nВторой случай\n");
+	printf("\nР’С‚РѕСЂРѕР№ СЃР»СѓС‡Р°Р№\n");
 	transport_problem_t problem_with_imbalance_2 = ReadFromFileTransportProblem("task_with_imbalance_2.txt");
 
 	matrix_t c_ib2;
@@ -132,7 +132,7 @@ int main()
 	double imbalance2 = SumColumn(b_ib2) - SumColumn(a_ib2);
 
 
-	printf("Матрица тарифов:\n");
+	printf("РњР°С‚СЂРёС†Р° С‚Р°СЂРёС„РѕРІ:\n");
 	for (int i = 0; i < size(a_ib2); i++)
 	{
 		for (int j = 0; j < size(b_ib2); j++)
@@ -141,20 +141,20 @@ int main()
 		}
 		printf("\n");
 	}
-	printf("\nСтолбец поставщиков:\n");
+	printf("\nРЎС‚РѕР»Р±РµС† РїРѕСЃС‚Р°РІС‰РёРєРѕРІ:\n");
 	for (int j = 0; j < size(a_ib2); j++)
 	{
 		printf("%lf\n", a_ib2[j]);
 
 	}
-	printf("\nСтолбец покупателей:\n");
+	printf("\nРЎС‚РѕР»Р±РµС† РїРѕРєСѓРїР°С‚РµР»РµР№:\n");
 	for (int j = 0; j < size(b_ib2); j++)
 	{
 		printf("%lf\n", b_ib2[j]);
 
 	}
 	printf("\n");
-	printf("\nМера штрафов потребителей:\n");
+	printf("\nРњРµСЂР° С€С‚СЂР°С„РѕРІ РїРѕС‚СЂРµР±РёС‚РµР»РµР№:\n");
 	for (int j = 0; j < size(f_ib2); j++)
 	{
 		printf("%lf\n", f_ib2[j]);
@@ -162,7 +162,7 @@ int main()
 	}
 	printf("\n");
 
-	printf("Дизбаланс:\n");
+	printf("Р”РёР·Р±Р°Р»Р°РЅСЃ:\n");
 	printf("%lf\n", imbalance2);
 
 	solving_t solving_ib2 = SolveTransportProblem(problem_with_imbalance_2);
@@ -172,7 +172,7 @@ int main()
 
 	double fine2 = result_ib2 - FindCost(c_ib2, X_ib2, size(a_ib2), size(b_ib2));
 
-	printf("Найденное оптимальное решение с учетом дизбаланса:\n");
+	printf("РќР°Р№РґРµРЅРЅРѕРµ РѕРїС‚РёРјР°Р»СЊРЅРѕРµ СЂРµС€РµРЅРёРµ СЃ СѓС‡РµС‚РѕРј РґРёР·Р±Р°Р»Р°РЅСЃР°:\n");
 	for (int i = 0; i < size(a_ib2); i++)
 	{
 		for (int j = 0; j < size(b_ib2); j++)
@@ -182,9 +182,9 @@ int main()
 		printf("\n");
 	}
 	printf("\n");
-	printf("Минимальные затраты на перевозку с учетом штрафов:\n");
+	printf("РњРёРЅРёРјР°Р»СЊРЅС‹Рµ Р·Р°С‚СЂР°С‚С‹ РЅР° РїРµСЂРµРІРѕР·РєСѓ СЃ СѓС‡РµС‚РѕРј С€С‚СЂР°С„РѕРІ:\n");
 	printf("%lf\n", result_ib2);
-	printf("Штраф:\n");
+	printf("РЁС‚СЂР°С„:\n");
 	printf("%lf\n", fine2);
 	return 0;
 
