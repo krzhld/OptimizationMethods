@@ -33,7 +33,7 @@ typedef std::tuple<matrix_t, column_t, column_t> canon_problem_t;
 typedef std::tuple<column_t, double, comb_t> solution_t;
 
 
-/* 
+/*
 * Следующая комбинация в поиске сочетаний без повторений
 * вход:
 * выход:
@@ -43,14 +43,14 @@ bool NextSet(comb_t& a, int n, int m);
 /**/
 void NextSetCycle(comb_t& a, int n, int m);
 
-/* 
-* Поиск всех сочетаний из n по m без повторений 
-* вход: 
+/*
+* Поиск всех сочетаний из n по m без повторений
+* вход:
 * выход:
 */
 combinations_t CombinationsWithoutRepetitions(int m, int n);
 
-/* 
+/*
 * Проверка совпадения числа и одного из значений в сочетании
 * вход:
 * выход:
@@ -60,8 +60,8 @@ bool IsNumberInCombination(int number, comb_t comb);
 /**/
 comb_t GetDifferenceSets(comb_t& A, comb_t& B);
 
-/* 
-* Проверка неотрицательности компонент вектора 
+/*
+* Проверка неотрицательности компонент вектора
 * вход: вектор
 * выход: булево значение
 */
@@ -74,7 +74,7 @@ bool NonNegativityOfVector(column_t v);
 */
 bool NonPositivityOfVector(column_t v);
 
-/* 
+/*
 * Перемножение матрицы на вектор
 * вход: квадратная матрица и подходящий по размеру вектор
 * выход: вектор
@@ -109,14 +109,14 @@ column_t RotationMethod(matrix_t A, column_t b);
 */
 column_t GaussMethod(matrix_t A, column_t b);
 
-/* 
+/*
 * Умножение транспонированного вектора на вектор такой же размерности
 * вход: два вектора
 * выход: их скалярное произведение
 */
 double MultipliedVectors(column_t v1, column_t v2);
 
-/* 
+/*
 * Определитель матрицы
 * вход: квадратная матрица
 * выход: её определитель
@@ -124,7 +124,7 @@ double MultipliedVectors(column_t v1, column_t v2);
 double Determinant(matrix_t matrix);
 
 /*
-читать из файла задачу ЛП и преобразовать её к общей задаче ЛП 
+читать из файла задачу ЛП и преобразовать её к общей задаче ЛП
 пример файла:
 ----------------------------------------------------------------
 min_func:

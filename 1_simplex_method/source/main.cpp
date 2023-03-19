@@ -1,12 +1,11 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include "framework.h"
+#include "simplex.h"
+#include "dual.h"
 #include <iomanip>
-#include <windows.h>
 
 using namespace std;
 
-string fix(float x, int p)
-{
+string fix(float x, int p) {
 	ostringstream strout;
 	strout << fixed << setprecision(p) << x;
 	string str = strout.str();
@@ -16,14 +15,73 @@ string fix(float x, int p)
 
 int main(void) {
 	setlocale(LC_ALL, "Russian");
-	SetConsoleOutputCP(866);
+
+	general_problem_t problem = FromFileConvertToGeneral("general_task_main.txt");
+
+	/*general_problem_t dual_problem = GetDualLinearProblem(problem);
+	// Ð¿Ð¾ÑÐºÐ¾Ð»ÑŒÐºÑƒ ÑÐ¸Ð¼Ð¿Ð»ÐµÐºÑ Ð¼ÐµÑ‚Ð¾Ð´ Ð¸Ñ‰ÐµÑ‚ Ð¼Ð¸Ð½Ð¸Ð¼ÑƒÐ¼, Ð° Ð´Ð² Ð·Ð°Ð´Ð°Ñ‡Ð° Ð½Ð° Ð¼Ð°ÐºÑÐ¸Ð¼ÑƒÐ¼, Ñ‚Ð¾ ÑƒÐ¼Ð½Ð¾Ð¶Ð¸Ð¼ Ð½Ð° -1 ÐºÑ€Ð¸Ñ‚ÐµÑ€Ð¸Ð¹ ÐºÐ°Ñ‡ÐµÑÑ‚Ð²Ð°
+	matrix_t dual_A; column_t dual_b, dual_c; int M1, N1;
+	tie(dual_A, dual_b, dual_c, M1, N1) = dual_problem;
+	for (int i = 0; i < dual_c.size(); ++i)
+		dual_c[i] *= -1;
+	dual_problem = make_tuple(dual_A, dual_b, dual_c, M1, N1);
+	canon_problem_t canon_problem = ConvertGeneralToCanon(dual_problem);
+
+	column_t X, Y;
+	double opt_value;
+	comb_t basis;
+	tie(opt_value, X, Y, basis) = SolveProblemWithSimplexMethod(canon_problem);
+
+	cout << endl << "ÐžÐ¿Ñ‚Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð¾Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ: " << -opt_value << endl << endl;
+
+	cout << "Ð’ÐµÐºÑ‚Ð¾Ñ€, ÑÐ¾Ð¾Ð±Ñ‰Ð°ÑŽÑ‰Ð¸Ð¹ Ð¾Ð¿Ñ‚Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð¾Ðµ Ñ€ÐµÑˆÐµÐ½Ð¸Ðµ Ð¿Ñ€ÑÐ¼Ð¾Ð¹ Ð·Ð°Ð´Ð°Ñ‡Ðµ: " << endl;
+	for (auto temp : X)
+		cout << temp << "\t";
+	cout << endl << endl;
+
+	cout << "Ð’ÐµÐºÑ‚Ð¾Ñ€, ÑÐ¾Ð¾Ð±Ñ‰Ð°ÑŽÑ‰Ð¸Ð¹ Ð¾Ð¿Ñ‚Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð¾Ðµ Ñ€ÐµÑˆÐµÐ½Ð¸Ðµ Ð´Ð²Ð¾Ð¹ÑÑ‚Ð²ÐµÐ½Ð½Ð¾Ð¹ Ð·Ð°Ð´Ð°Ñ‡Ðµ: " << endl;
+	for (auto temp : Y)
+		cout << temp << "\t";
+	cout << endl << endl;
+
+	cout << "Ð˜Ð½Ð´ÐµÐºÑÑ‹ Ð±Ð°Ð·Ð¸ÑÐ°: " << endl;
+	for (auto temp : basis)
+		cout << temp << "\t";
+	cout << endl << endl;*/
+
+	canon_problem_t canon_problem = ConvertGeneralToCanon(problem);
+
+	column_t X, Y;
+	double opt_value;
+	comb_t basis;
+	tie(opt_value, X, Y, basis) = SolveProblemWithSimplexMethod(canon_problem);
+
+	cout << endl << "ÐžÐ¿Ñ‚Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð¾Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ: " << opt_value << endl << endl;
+
+	cout << "Ð’ÐµÐºÑ‚Ð¾Ñ€, ÑÐ¾Ð¾Ð±Ñ‰Ð°ÑŽÑ‰Ð¸Ð¹ Ð¾Ð¿Ñ‚Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð¾Ðµ Ñ€ÐµÑˆÐµÐ½Ð¸Ðµ Ð¿Ñ€ÑÐ¼Ð¾Ð¹ Ð·Ð°Ð´Ð°Ñ‡Ðµ: " << endl;
+	for (auto temp : X)
+		cout << temp << "\t";
+	cout << endl << endl;
+
+	cout << "Ð’ÐµÐºÑ‚Ð¾Ñ€, ÑÐ¾Ð¾Ð±Ñ‰Ð°ÑŽÑ‰Ð¸Ð¹ Ð¾Ð¿Ñ‚Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð¾Ðµ Ñ€ÐµÑˆÐµÐ½Ð¸Ðµ Ð´Ð²Ð¾Ð¹ÑÑ‚Ð²ÐµÐ½Ð½Ð¾Ð¹ Ð·Ð°Ð´Ð°Ñ‡Ðµ: " << endl;
+	for (auto temp : Y)
+		cout << temp << "\t";
+	cout << endl << endl;
+
+	cout << "Ð˜Ð½Ð´ÐµÐºÑÑ‹ Ð±Ð°Ð·Ð¸ÑÐ°: " << endl;
+	for (auto temp : basis)
+		cout << temp << "\t";
+	cout << endl << endl;
+
+	/*
+	
 
 
-	// ÇÀÏÈÑÜ ÇÀÄÀ×È Â ÎÁÙÅÌ ÂÈÄÅ
+	// Ð—ÐÐŸÐ˜Ð¡Ð¬ Ð—ÐÐ”ÐÐ§Ð˜ Ð’ ÐžÐ‘Ð©Ð•Ðœ Ð’Ð˜Ð”Ð•
 	general_problem_t problem = FromFileConvertToGeneral("general_task_main.txt");
 	matrix_t A; column_t b, c; int M1, N1;
 	tie(A, b, c, M1, N1) = problem;
-	cout << "Îáùàÿ çàäà÷à ËÏ:" << endl << "Ìàòðèöà êîýôôèöèåíòîâ:" << endl;
+	cout << "ÐžÐ±Ñ‰Ð°Ñ Ð·Ð°Ð´Ð°Ñ‡Ð° Ð›ÐŸ:" << endl << "ÐœÐ°Ñ‚Ñ€Ð¸Ñ†Ð° ÐºÐ¾ÑÑ„Ñ„Ð¸Ñ†Ð¸ÐµÐ½Ñ‚Ð¾Ð²:" << endl;
 	for (int i = 0; i < M1; ++i) {
 		for (int j = 0; j < A.size(); ++j) {
 			cout << A[j][i] << "\t";
@@ -38,18 +96,18 @@ int main(void) {
 		cout << "=\t" << b[i];
 		cout << endl;
 	}
-	cout << endl << "Êðèòåðèé êà÷åñòâà:" << endl;
+	cout << endl << "ÐšÑ€Ð¸Ñ‚ÐµÑ€Ð¸Ð¹ ÐºÐ°Ñ‡ÐµÑÑ‚Ð²Ð°:" << endl;
 	for (auto temp : c) {
 		cout << temp << "\t";
 	}
-	cout << endl << "Íåîòðèöàòåëüíû ïåðâûå " << N1 << " ïåðåì." << endl << endl << endl << endl << endl;
+	cout << endl << "ÐÐµÐ¾Ñ‚Ñ€Ð¸Ñ†Ð°Ñ‚ÐµÐ»ÑŒÐ½Ñ‹ Ð¿ÐµÑ€Ð²Ñ‹Ðµ " << N1 << " Ð¿ÐµÑ€ÐµÐ¼." << endl << endl << endl << endl << endl;
 
 
 
-	// ÏÐÅÎÁÐÀÇÎÂÀÒÜ ÎÁÙÓÞ ÇÀÄÀ×Ó Ê ÊÀÍÎÍÈ×ÅÑÊÎÉ 
+	// ÐŸÐ Ð•ÐžÐ‘Ð ÐÐ—ÐžÐ’ÐÐ¢Ð¬ ÐžÐ‘Ð©Ð£Ð® Ð—ÐÐ”ÐÐ§Ð£ Ðš ÐšÐÐÐžÐÐ˜Ð§Ð•Ð¡ÐšÐžÐ™ 
 	canon_problem_t canon_problem = ConvertGeneralToCanon(problem);
 	tie(A, b, c) = canon_problem;
-	cout << "Êàíîíè÷åñêàÿ çàäà÷à ËÏ:" << endl << "Ìàòðèöà êîýôôèöèåíòîâ:" << endl;
+	cout << "ÐšÐ°Ð½Ð¾Ð½Ð¸Ñ‡ÐµÑÐºÐ°Ñ Ð·Ð°Ð´Ð°Ñ‡Ð° Ð›ÐŸ:" << endl << "ÐœÐ°Ñ‚Ñ€Ð¸Ñ†Ð° ÐºÐ¾ÑÑ„Ñ„Ð¸Ñ†Ð¸ÐµÐ½Ñ‚Ð¾Ð²:" << endl;
 	for (int i = 0; i < A[0].size(); ++i) {
 		for (int j = 0; j < A.size(); ++j) {
 			cout << A[j][i] << "\t";
@@ -57,7 +115,7 @@ int main(void) {
 		cout << "=\t" << b[i];
 		cout << endl;
 	}
-	cout << endl << "Êðèòåðèé êà÷åñòâà:" << endl;
+	cout << endl << "ÐšÑ€Ð¸Ñ‚ÐµÑ€Ð¸Ð¹ ÐºÐ°Ñ‡ÐµÑÑ‚Ð²Ð°:" << endl;
 	for (auto temp : c) {
 		cout << temp << "\t";
 	}
@@ -65,39 +123,39 @@ int main(void) {
 
 
 
-	/*
-	// ÏÎËÓ×ÈËÈ ÐÅØÅÍÈÅ ÏÐßÌÎÉ ÇÀÄÀ×È ÌÅÒÎÄÎÌ ÏÅÐÅÁÎÐÀ ÊÐÀÉÍÈÕ ÒÎ×ÅÊ
+	// ÐŸÐžÐ›Ð£Ð§Ð˜Ð›Ð˜ Ð Ð•Ð¨Ð•ÐÐ˜Ð• ÐŸÐ Ð¯ÐœÐžÐ™ Ð—ÐÐ”ÐÐ§Ð˜ ÐœÐ•Ð¢ÐžÐ”ÐžÐœ ÐŸÐ•Ð Ð•Ð‘ÐžÐ Ð ÐšÐ ÐÐ™ÐÐ˜Ð¥ Ð¢ÐžÐ§Ð•Ðš
 	column_t Xtreme;
 	double res;
 	comb_t comb;
 	general_problem_t problem1 = FromFileConvertToGeneral("general_task_main1.txt");
 	canon_problem_t canon_problem1 = ConvertGeneralToCanon(problem1);
 	tie(Xtreme, res, comb) = IteratingThroughExtremePoints(canon_problem1);
-	cout << "Ðåøåíèå ïðÿìîé çàäà÷è ìåòîäîì ïåðåáîðà êðàéíèõ òî÷åê:" << endl;
-	cout << "Îïòèìàëüíîå çíà÷åíèå: " << -res << endl;
-	cout << "Îïòèìàëüíàÿ òî÷êà: " << endl;
+	cout << "Ð ÐµÑˆÐµÐ½Ð¸Ðµ Ð¿Ñ€ÑÐ¼Ð¾Ð¹ Ð·Ð°Ð´Ð°Ñ‡Ð¸ Ð¼ÐµÑ‚Ð¾Ð´Ð¾Ð¼ Ð¿ÐµÑ€ÐµÐ±Ð¾Ñ€Ð° ÐºÑ€Ð°Ð¹Ð½Ð¸Ñ… Ñ‚Ð¾Ñ‡ÐµÐº:" << endl;
+	cout << "ÐžÐ¿Ñ‚Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð¾Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ: " << -res << endl;
+	cout << "ÐžÐ¿Ñ‚Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð°Ñ Ñ‚Ð¾Ñ‡ÐºÐ°: " << endl;
 	for (auto temp : Xtreme)
 		cout << temp << "\t";
 	cout << endl << endl << endl << endl << endl;
 
 
 
-	// ÍÀÉÄÅÌ ÐÅØÅÍÈÅ ÄÂÎÉÑÒÂÅÍÍÎÉ ÇÀÄÀ×È ×ÅÐÅÇ ÐÅØÅÍÈÅ ÏÐßÌÎÉ
+	// ÐÐÐ™Ð”Ð•Ðœ Ð Ð•Ð¨Ð•ÐÐ˜Ð• Ð”Ð’ÐžÐ™Ð¡Ð¢Ð’Ð•ÐÐÐžÐ™ Ð—ÐÐ”ÐÐ§Ð˜ Ð§Ð•Ð Ð•Ð— Ð Ð•Ð¨Ð•ÐÐ˜Ð• ÐŸÐ Ð¯ÐœÐžÐ™
 	column_t Y = SolvingDualProblem(canon_problem1, Xtreme, comb);
-	cout << "Ðåøåíèå äâîéñòâåííîé çàäà÷è, íàéäåííîå ÷åðåç ðåøåíèå ïðÿìîé çàäà÷è: " << endl;
+	cout << "Ð ÐµÑˆÐµÐ½Ð¸Ðµ Ð´Ð²Ð¾Ð¹ÑÑ‚Ð²ÐµÐ½Ð½Ð¾Ð¹ Ð·Ð°Ð´Ð°Ñ‡Ð¸, Ð½Ð°Ð¹Ð´ÐµÐ½Ð½Ð¾Ðµ Ñ‡ÐµÑ€ÐµÐ· Ñ€ÐµÑˆÐµÐ½Ð¸Ðµ Ð¿Ñ€ÑÐ¼Ð¾Ð¹ Ð·Ð°Ð´Ð°Ñ‡Ð¸: " << endl;
 	for (auto temp : Y)
 		cout << fix(temp, 6) << "\t";
 	cout << endl << endl;
 	double temp = 0;
 	for (int i = 0; i < b.size(); ++i)
 		temp += b[i] * Y[i];
-	cout << "Çíà÷åíèå ôóíêöèè öåëè äâîéñòâåííîé çàäà÷è: " << -temp << endl << endl << endl << endl;
+	cout << "Ð—Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¸ Ñ†ÐµÐ»Ð¸ Ð´Ð²Ð¾Ð¹ÑÑ‚Ð²ÐµÐ½Ð½Ð¾Ð¹ Ð·Ð°Ð´Ð°Ñ‡Ð¸: " << -temp << endl << endl << endl << endl;
 
 
-	// ÏÎËÓ×ÈÒÜ ÄÂÎÉÑÒÂÅÍÍÓÞ ÇÀÄÀ×Ó Â ÎÁÙÅÌ ÂÈÄÅ
+	
+	// ÐŸÐžÐ›Ð£Ð§Ð˜Ð¢Ð¬ Ð”Ð’ÐžÐ™Ð¡Ð¢Ð’Ð•ÐÐÐ£Ð® Ð—ÐÐ”ÐÐ§Ð£ Ð’ ÐžÐ‘Ð©Ð•Ðœ Ð’Ð˜Ð”Ð•
 	general_problem_t dual_problem = GetDualLinearProblem(problem);
 	tie(A, b, c, M1, N1) = dual_problem;
-	cout << "Äâîéñòâåííàÿ çàäà÷à ê îáùåé çàäà÷å ËÏ:" << endl << "Ìàòðèöà êîýôôèöèåíòîâ:" << endl;
+	cout << "Ð”Ð²Ð¾Ð¹ÑÑ‚Ð²ÐµÐ½Ð½Ð°Ñ Ð·Ð°Ð´Ð°Ñ‡Ð° Ðº Ð¾Ð±Ñ‰ÐµÐ¹ Ð·Ð°Ð´Ð°Ñ‡Ðµ Ð›ÐŸ:" << endl << "ÐœÐ°Ñ‚Ñ€Ð¸Ñ†Ð° ÐºÐ¾ÑÑ„Ñ„Ð¸Ñ†Ð¸ÐµÐ½Ñ‚Ð¾Ð²:" << endl;
 	for (int i = 0; i < M1; ++i) {
 		for (int j = 0; j < A.size(); ++j) {
 			cout << A[j][i] << "\t";
@@ -112,26 +170,24 @@ int main(void) {
 		cout << "=\t" << b[i];
 		cout << endl;
 	}
-	cout << endl << "Êðèòåðèé êà÷åñòâà:" << endl;
+	cout << endl << "ÐšÑ€Ð¸Ñ‚ÐµÑ€Ð¸Ð¹ ÐºÐ°Ñ‡ÐµÑÑ‚Ð²Ð°:" << endl;
 	for (auto temp : c) {
 		cout << temp << "\t";
 	}
-	cout << endl << "Íåîòðèöàòåëüíû ïåðâûå " << N1 << " ïåðåì." << endl << endl << endl << endl << endl;
+	cout << endl << "ÐÐµÐ¾Ñ‚Ñ€Ð¸Ñ†Ð°Ñ‚ÐµÐ»ÑŒÐ½Ñ‹ Ð¿ÐµÑ€Ð²Ñ‹Ðµ " << N1 << " Ð¿ÐµÑ€ÐµÐ¼." << endl << endl << endl << endl << endl;
 
 
 
-	// ÏÎËÓ×ÈËÈ ÐÅØÅÍÈÅ ÄÂÎÉÑÒÂÅÍÍÎÉ ÇÀÄÀ×È ÌÅÒÎÄÎÌ ÏÅÐÅÁÎÐÀ ÊÐÀÉÍÈÕ ÒÎ×ÅÊ
+	// ÐŸÐžÐ›Ð£Ð§Ð˜Ð›Ð˜ Ð Ð•Ð¨Ð•ÐÐ˜Ð• Ð”Ð’ÐžÐ™Ð¡Ð¢Ð’Ð•ÐÐÐžÐ™ Ð—ÐÐ”ÐÐ§Ð˜ ÐœÐ•Ð¢ÐžÐ”ÐžÐœ ÐŸÐ•Ð Ð•Ð‘ÐžÐ Ð ÐšÐ ÐÐ™ÐÐ˜Ð¥ Ð¢ÐžÐ§Ð•Ðš
 	canon_problem_t canon_dual_problem = ConvertGeneralToCanon(dual_problem);
 	tie(Xtreme, res, comb) = IteratingThroughExtremePoints(canon_dual_problem);
-	cout << "Ðåøåíèå äâîéñòâåííîé çàäà÷è ìåòîäîì ïåðåáîðà êðàéíèõ òî÷åê:" << endl;
-	cout << "Îïòèìàëüíîå çíà÷åíèå: " << res << endl;
-	cout << "Îïòèìàëüíàÿ òî÷êà: " << endl;
+	cout << "Ð ÐµÑˆÐµÐ½Ð¸Ðµ Ð´Ð²Ð¾Ð¹ÑÑ‚Ð²ÐµÐ½Ð½Ð¾Ð¹ Ð·Ð°Ð´Ð°Ñ‡Ð¸ Ð¼ÐµÑ‚Ð¾Ð´Ð¾Ð¼ Ð¿ÐµÑ€ÐµÐ±Ð¾Ñ€Ð° ÐºÑ€Ð°Ð¹Ð½Ð¸Ñ… Ñ‚Ð¾Ñ‡ÐµÐº:" << endl;
+	cout << "ÐžÐ¿Ñ‚Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð¾Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ: " << res << endl;
+	cout << "ÐžÐ¿Ñ‚Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð°Ñ Ñ‚Ð¾Ñ‡ÐºÐ°: " << endl;
 	for (auto temp : Xtreme)
 		cout << temp << "\t";
 	cout << endl;
 
-
-	*/
 
 
 	column_t X, Y;
@@ -139,22 +195,24 @@ int main(void) {
 	matrix_t basis;
 	tie(opt_value, X, Y, basis) = SolveProblemWithSimplexMethod(canon_problem);
 
-	/*cout << "Îïòèìàëüíîå çíà÷åíèå ôóíêöèè öåëè: " << opt_value << endl;
-	cout << "Îïòèìàëüíûé âåêòîð: " << endl;
+
+	cout << "ÐžÐ¿Ñ‚Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð¾Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¸ Ñ†ÐµÐ»Ð¸: " << opt_value << endl;
+	cout << "ÐžÐ¿Ñ‚Ð¸Ð¼Ð°Ð»ÑŒÐ½Ñ‹Ð¹ Ð²ÐµÐºÑ‚Ð¾Ñ€: " << endl;
 	for (auto temp : X)
 		cout << temp << "\t";
 	cout << endl;
-	cout << "Áàçèñíûå âåêòîðà: " << endl;
+	cout << "Ð‘Ð°Ð·Ð¸ÑÐ½Ñ‹Ðµ Ð²ÐµÐºÑ‚Ð¾Ñ€Ð°: " << endl;
 	for (int j = 0; j < basis[0].size(); ++j) {
 		for (int i = 0; i < basis.size(); ++j)
 			cout << basis[i][j] << "\t";
 		cout << endl;
 	}
 	cout << endl;
-	cout << "Äâîéñòâåííûé âåêòîð: " << endl;
+	cout << "Ð”Ð²Ð¾Ð¹ÑÑ‚Ð²ÐµÐ½Ð½Ñ‹Ð¹ Ð²ÐµÐºÑ‚Ð¾Ñ€: " << endl;
 	for (auto temp : Y)
 		cout << temp << "\t";
-	cout << endl;*/
+	cout << endl;
+	*/
 	
 	return 0;
 }
