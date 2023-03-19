@@ -15,8 +15,8 @@ typedef vector<double> column_t;
 // матрица вещественных чисел
 typedef vector<column_t> matrix_t;
 
-// кортеж из столбцов данных о поставщиках, о покупателях и матрицы стоимостей перевозок
-typedef tuple<column_t, column_t, matrix_t> transport_problem_t;
+// кортеж из столбцов данных о поставщиках, о покупателях и матрицы стоимостей перевозок, а также столбец данных о штрафах за недопоставку 
+typedef tuple<column_t, column_t, matrix_t, column_t> transport_problem_t;
 
 // кортеж из матрицы оптимальных объемов перевозок и числа - оптимальной стоимости перевозок
 typedef tuple<matrix_t, double> solving_t;
@@ -64,3 +64,9 @@ canon_problem_t GetCanonProblemFromTransportProblem(transport_problem_t& problem
 
 /*Решение транспортной задачи с учетом возможности дизбаланса данных*/
 solving_t SolveTransportProblem(transport_problem_t problem);
+
+/*Сумма элементов столбца */
+double SumColumn(column_t col);
+
+/*Общая стоимость перевозок*/
+double FindCost(matrix_t& c, matrix_t& X, int N, int M);
