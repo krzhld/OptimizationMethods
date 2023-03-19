@@ -92,7 +92,7 @@ canon_problem_t GetCanonProblemFromTransportProblem(transport_problem_t& transpo
 	int m = size(tb);
 
 	matrix_t cA; // матрица А канонической ЗЛП
-	cA.resize(n * m); //в транспортной задаче nm переменных
+	cA.resize(n * m); //в транспортной задаче n*m переменных
 	column_t cAcolumn; 
 	cAcolumn.resize(n + m - 1); //в канонической задаче будет n+m-1 уравнений
 
@@ -105,7 +105,6 @@ canon_problem_t GetCanonProblemFromTransportProblem(transport_problem_t& transpo
 	int j = 0;
 	for (int i = 0; i < n; i++) 
 	{
-	
 		while (j < n*m)
 		{
 			cA[j][i] = 1;

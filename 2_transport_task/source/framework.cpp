@@ -427,7 +427,7 @@ general_problem_t FromFileConvertToGeneral(string filename) {
 			++i;
 		}
 	}
-	
+
 	// очищаем вспомогательные векторы/матрицы
 	N1_vec.clear();
 	iterator.clear();

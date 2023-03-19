@@ -68,19 +68,6 @@ void NormalizeVector(column_t& X) {
 
 // Nk_indexes - индексы базисных столбцов
 SimplexState IterSimplex(matrix_t& main_A, comb_t& Nk_indexes, column_t& main_C, column_t& cur_X, column_t& cur_Y) {
-	
-	cout << endl << "Итерация:" << endl;
-	cout << "Индексы базиса: ";
-	for (auto temp : Nk_indexes)
-		cout << temp << " ";
-	cout << endl << "Текущий x: ";
-	for (auto temp : cur_X)
-		cout << temp << " ";
-	cout << endl << "Текущий y: ";
-	for (auto temp : cur_Y)
-		cout << temp << " ";
-	cout << endl;
-
 	int M_number = main_A.size();
 	int N_number = main_C.size();
 
@@ -136,7 +123,7 @@ SimplexState IterSimplex(matrix_t& main_A, comb_t& Nk_indexes, column_t& main_C,
 	if (NonNegativityOfVector(d_k)) {
 		FreeMatrix(A_M_Nk);
 		return SimplexState::OPTIMAL;
-	}	
+	}
 
 	/* если нет, то начинаем строить u_k[N] */
 	// найдем j_k
@@ -190,7 +177,7 @@ SimplexState IterSimplex(matrix_t& main_A, comb_t& Nk_indexes, column_t& main_C,
 			CalculateNextSupportVector(Nk_indexes, Nk_plus_indexes, u_k, cur_X, N_number, j_k);
 			GetCurMatrix(main_A, A_M_Nk, Nk_indexes);
 			if (Determinant(A_M_Nk) != 0)
-				return SimplexState::NEXT;		
+				return SimplexState::NEXT;
 		}
 		else {
 			// иначе меняем базис
@@ -250,12 +237,6 @@ tuple<double, column_t, column_t, comb_t> SimplexMethod(canon_problem_t& problem
 	for (int i = 0; i < M; ++i)
 		matrix_A0[i].clear();
 	matrix_A0.clear();
-
-	// проверка: является ли матрица полноранговой
-	if (!IsFullRankMatrix(matrix_A)) {
-		cout << "Матрица ограничений не является полноранговой." << endl << "Досрочное завершение работы." << endl;
-		exit(-1);
-	}
 
 	column_t cur_Y(M);
 
@@ -318,11 +299,11 @@ tuple<column_t, comb_t> GetInitialApprox(canon_problem_t& problem) {
 
 	canon_problem_t help_problem = make_tuple(matrix_A, column_B, column_C);
 
-	cout << "Начало поиска начального приближения методом искусственного базиса." << endl;
+	// Начало поиска начального приближения методом искусственного базиса
 
 	SimplexMethod(help_problem, first_approx, basis);
 
-	cout << endl << "Конец поиска начального приближения методом искусственного базиса." << endl;
+	// Конец поиска начального приближения методом искусственного базиса
 
 	/* если хотя бы одна компонента y[m] положительна, то исходная задача не имеет ни одной допустимой точки */
 	for (int i = c_size; i < c_size + b_size; ++i) {

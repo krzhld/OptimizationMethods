@@ -1,8 +1,11 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "transport_problem.h"
+#include "simplex.h"
+using namespace std;
 
 int main()
 {
+
 	setlocale(LC_ALL, "Russian");
 
 	transport_problem_t problem = ReadFromFileTransportProblem("task.txt");
@@ -11,8 +14,6 @@ int main()
 	column_t b, a;
 	tie(a, b, c) = problem;
 
-
-	canon_problem_t canonProblem = GetCanonProblemFromTransportProblem(problem);
 
 	printf("Матрица тарифов:\n");
 	for (int i = 0; i < size(a); i++)
@@ -37,12 +38,14 @@ int main()
 	}
 	printf("\n");
 
+	printf("\nРешение задачи методом потенциалов\n");
+
 	solving_t solving = SolveTransportProblem(problem);
 	matrix_t X;
 	double result;
 	tie(X, result) = solving;
 
-	printf("Найденное оптимальное решение:\n");
+	printf("\nНайденное оптимальное решение методом потенциалов:\n");
 	for (int i = 0; i < size(a); i++)
 	{
 		for (int j = 0; j < size(b); j++)
@@ -52,11 +55,34 @@ int main()
 		printf("\n");
 	}
 	printf("\n");
-	printf("Минимальные затраты на перевозку:\n");
+	printf("Минимальные затраты на перевозку, найденные методом потенциалов:\n");
 	printf("%lf\n", result);
 
+	// -----------------------------------------------------------------------------------------------------------------------------------------
+	
+	printf("\nРешение задачи симплекс методом\n");
+	canon_problem_t canon_problem = GetCanonProblemFromTransportProblem(problem);
+	column_t X_col, Y;
+	double opt_value;
+	comb_t basis;
+	tie(opt_value, X_col, Y, basis) = SolveProblemWithSimplexMethod(canon_problem);
 
-	printf("\nРешение задачи в случае недопоставки с учетом штрафов\n");
+	printf("\nНайденное оптимальное решение симплекс методом:\n");
+	for (int i = 0; i < size(a); i++)
+	{
+		for (int j = 0; j < size(b); j++)
+		{
+			printf("%lf ", X_col[i * size(b) + j]);
+		}
+		printf("\n");
+	}
+	printf("\n");
+	printf("Минимальные затраты на перевозку, найденные симплекс методом:\n");
+	printf("%lf\n", opt_value);
+
+	// -----------------------------------------------------------------------------------------------------------------------------------------
+	
+	printf("\n\nРешение задачи в случае недопоставки с учетом штрафов\n");
 	transport_problem_t problem_with_imbalance = ReadFromFileTransportProblem("task_with_imbalance.txt");
 
 	matrix_t c_ib;
