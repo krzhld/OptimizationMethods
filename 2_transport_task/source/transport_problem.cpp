@@ -15,7 +15,7 @@ transport_problem_t ReadFromFileTransportProblem(string filename)
 	column_t a; // вектор количества товара у поставщиков
 	column_t b; // вектор запроса товара у покупателей
 	matrix_t c; // матрица стоимостей перевозок из пунктов поставщиков в пункты покупателей
-
+	column_t f; // столбец штрафов от потребителей в случае недопоставки
 	getline(input_file_stream, cur_string);
 
 	// если файл не начинается с a: то завершаем программу
@@ -58,6 +58,22 @@ transport_problem_t ReadFromFileTransportProblem(string filename)
 		c.resize(N); 
 	}
 	getline(input_file_stream, cur_string);
+	// если в файле нет f: то завершаем программу
+	if (cur_string != "f:") {
+		cout << "Error reading file!" << endl;
+		exit(-1);
+	}
+	else {
+		getline(input_file_stream, cur_string);
+		// открываем поток чтения из прочитанной строки
+		stringstream str_stream(cur_string);
+
+		// считываем потребность товара покупателями
+		while (str_stream >> cur_number)
+			f.push_back(cur_number);
+
+	}
+	getline(input_file_stream, cur_string);
 	if (cur_string != "c:") {
 		cout << "Error reading file!" << endl;
 		exit(-1);
@@ -76,20 +92,40 @@ transport_problem_t ReadFromFileTransportProblem(string filename)
 	}
 	// закрываем поток файла
 	input_file_stream.close();
-	transport_problem_t problem = make_tuple(a, b, c);
+	transport_problem_t problem = make_tuple(a, b, c, f);
 	return problem;
 
+}
+
+double SumColumn(column_t col)
+{
+	double res = 0;
+	for (auto& c : col)
+	{
+		res += c;
+	}
+	return res;
 }
 
 /*Получение из транспортной задачи канонической задачи в классической постановке*/
 canon_problem_t GetCanonProblemFromTransportProblem(transport_problem_t& transportProblem)
 {
 	matrix_t tC;
-	column_t ta, tb; // данные транспортной задачи
-	tie(ta, tb, tC) = transportProblem;
+	column_t ta, tb, tf; // данные транспортной задачи
+	tie(ta, tb, tC, tf) = transportProblem;
 
 	int n = size(ta);
 	int m = size(tb);
+
+	double sumA = SumColumn(ta); //суммарное количество товара у поставщиков
+	double sumB = SumColumn(tb); //суммарная потребность всех потребителей
+
+	if (sumA != sumB)
+	{
+		cout << "Сведите задачу к сбалансированной!" << endl;
+		exit(-1);
+	}
+
 
 	matrix_t cA; // матрица А канонической ЗЛП
 	cA.resize(n * m); //в транспортной задаче nm переменных
@@ -163,15 +199,7 @@ canon_problem_t GetCanonProblemFromTransportProblem(transport_problem_t& transpo
 
 }
 
-double SumColumn(column_t col)
-{
-	double res = 0;
-	for (auto& c : col)
-	{
-		res += c;
-	}
-	return res;
-}
+
 
 double SumMatrix(matrix_t matrix, int N, int M)
 {
@@ -188,9 +216,9 @@ double SumMatrix(matrix_t matrix, int N, int M)
 
 solving_t SolveTransportProblem(transport_problem_t problem)
 {
-	column_t a, b;
+	column_t a, b, f;
 	matrix_t c;
-	tie(a, b, c) = problem;
+	tie(a, b, c, f) = problem;
 	int N = size(a);
 	int M = size(b);
 
@@ -208,20 +236,17 @@ solving_t SolveTransportProblem(transport_problem_t problem)
 	{
 		double difference = sumB - sumA; //разность суммарной потребности и суммарных запасов
 
-		double meanCost = SumMatrix(c, N, M) / (N * M); //средняя стоимость перевозок 
-
-		double fine = double(int(meanCost) * 5); //штрафы за недопоставку 
-		
-	
 		a.push_back(difference); // создаем фиктивного поставщика, запасы которого равны разности потребностей покупателей и суммарных запасов поставщиков
 		c.resize(N + 1);
 		c[N].resize(M); 
+
+		// штрафы за недопоставку считаются в зависимости недопоставки
 		for (int i = 0; i < M;i++) 
 		{
-			c[N][i] = fine; //стоимости перевозок от фиктивных поставщиков равны штрафу за недопоставку
+			c[N][i] = double(int(f[i] * difference/sumB)) ; //стоимости перевозок от фиктивных поставщиков равны штрафу за недопоставку
 		}
 
-		transport_problem_t new_problem = make_tuple(a, b, c);
+		transport_problem_t new_problem = make_tuple(a, b, c, f);
 
 		matrix_t X;
 		double result;
@@ -557,9 +582,9 @@ void NewX(matrix_t &X, matrix_t &temp, int N, int M, int imin, int jmin)
 /*Метод потенциалов решения транспортной задачи закрытого типа*/
 solving_t MethodOfPotentials(transport_problem_t problem)
 {
-	column_t a, b; 
+	column_t a, b, f; 
 	matrix_t c;
-	tie(a, b, c) = problem;
+	tie(a, b, c, f) = problem;
 	int N = size(a);
 	int M = size(b);
 
