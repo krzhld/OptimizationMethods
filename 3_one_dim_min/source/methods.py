@@ -2,6 +2,7 @@ import math
 
 alpha = (3 - 5 ** 0.5) / 2
 
+
 def golden_section_method(func, a, b, eps):
     n_eps = (math.log(eps) - math.log(b - a)) / math.log(1 - alpha)
     n_eps = math.ceil(n_eps)
@@ -11,18 +12,18 @@ def golden_section_method(func, a, b, eps):
     x_2 = -10e10
     func_x_1 = -10e10
     func_x_2 = -10e10
-    x_2_flag = 1 #флаг, что x_2 нужно пересчитать
-    x_1_flag = 1 #флаг, что x_1 нужно пересчитать
+    x_2_flag = 1 # флаг, что x_2 нужно пересчитать
+    x_1_flag = 1 # флаг, что x_1 нужно пересчитать
     print(f'predictive n: {n_eps}')
     while True:
         if abs(b - a) < eps:
             return (a + b) / 2, n, a, b
-        if (x_1_flag == 1):
+        if x_1_flag == 1:
             x_1 = a + alpha * (b - a)
             func_x_1 = func(x_1)
             n += 1
 
-        if (x_2_flag == 1):
+        if x_2_flag == 1:
             x_2 = b - alpha * (b - a)
             func_x_2 = func(x_2)
             n += 1
@@ -40,8 +41,6 @@ def golden_section_method(func, a, b, eps):
             func_x_2 = func_x_1
             x_1_flag = 1
             x_2_flag = 0
-
-
 
 
 def dichotomy_method(func, a, b, eps):
@@ -83,12 +82,11 @@ def trial_points_method(func, a, b, eps):
         x_1 = a + quarter
         func_x_1 = func(x_1)
         n += 1
-        if(n == 1):
+        if n == 1:
             x_2 = x_1 + quarter
             func_x_2 = func(x_2)
             n += 1
 
-        print(f'x_1={x_1}, x_2={x_2}, [{a}, {b}]')
         if func_x_1 < func_x_2:
             b = x_2
             x_2 = x_1
