@@ -24,44 +24,44 @@ def grad_f_2(x, y):
 
 alpha = (3 - 5 ** 0.5) / 2
 
-def golden_section_method(func, a, b, eps):
-    n_eps = (math.log(eps) - math.log(b - a)) / math.log(1 - alpha)
-    n_eps = math.ceil(n_eps)
-    n_eps += 1
+
+#модификая метода дихотомии для поиска alpha_k в методе наискорейшего спуска
+def golden_section_method(func, eps : float, grad : list, x : list):
     n = 0
-    x_1 = -10e10
-    x_2 = -10e10
-    func_x_1 = -10e10
-    func_x_2 = -10e10
-    x_2_flag = 1 #флаг, что x_2 нужно пересчитать
-    x_1_flag = 1 #флаг, что x_1 нужно пересчитать
-    print(f'predictive n: {n_eps}')
+    a = 0
+    b = 1
+    alpha_1 = -10e10
+    alpha_2 = -10e10
+    func_alpha_1 = -10e10
+    func_alpha_2 = -10e10
+    alpha_2_flag = 1 #флаг, что alpha_2 нужно пересчитать
+    alpha_1_flag = 1 #флаг, что alpha_1 нужно пересчитать
     while True:
         if abs(b - a) < eps:
-            return (a + b) / 2, n, a, b
-        if (x_1_flag == 1):
-            x_1 = a + alpha * (b - a)
-            func_x_1 = func(x_1)
+            return (a + b) / 2, n
+        if (alpha_1_flag == 1):
+            alpha_1 = a + alpha * (b - a)
+            func_alpha_1 = func(x[0] - alpha_1 * grad[0], x[1] - alpha_1 * grad[1])
             n += 1
 
-        if (x_2_flag == 1):
-            x_2 = b - alpha * (b - a)
-            func_x_2 = func(x_2)
+        if (alpha_2_flag == 1):
+            alpha_2 = b - alpha * (b - a)
+            func_alpha_2 = func(x[0] - alpha_2 * grad[0], x[1] - alpha_2 * grad[1])
             n += 1
 
-        if func_x_1 > func_x_2:
-            a = x_1
-            x_1 = x_2
-            func_x_1 = func_x_2
-            x_1_flag = 0
-            x_2_flag = 1
+        if func_alpha_1 > func_alpha_2:
+            a = alpha_1
+            alpha_1 = alpha_2
+            func_alpha_1 = func_alpha_2
+            alpha_1_flag = 0
+            alpha_2_flag = 1
 
         else:
-            b = x_2
-            x_2 = x_1
-            func_x_2 = func_x_1
-            x_1_flag = 1
-            x_2_flag = 0
+            b = alpha_2
+            alpha_2 = alpha_1
+            func_alpha_2 = func_alpha_1
+            alpha_1_flag = 1
+            alpha_2_flag = 0
 
 
 
@@ -84,38 +84,81 @@ def dichotomy_method(func, eps : float, grad : list, x : list):
         if func_alpha_1 <= func_alpha_2:
             b = alpha_2
 
+# def method_of_steepest_descent_dich(func, grad_func, eps):
+#     x_k = -5
+#     y_k = -2
+#     num_of_func_call = 0
+#     grad = grad_func(x_k, y_k)
+#     while(True):
+#         if((grad[0]**2 + grad[1]**2)**0.5 < eps):
+#             return x_k, y_k, num_of_func_call
+#         result_find_alpha_k = dichotomy_method(func, eps / 1000, grad, [x_k, y_k])
+#         alpha_k = result_find_alpha_k[0]
+#         num_of_func_call += result_find_alpha_k[1]
+#         x_k -= alpha_k * grad[0]
+#         y_k -= alpha_k * grad[1]
+#         grad = grad_func(x_k, y_k)
 
-def method_of_steepest_descent(func, grad_func, eps):
-    x_k = 0
-    y_k = 0.314
+def method_of_steepest_descent_gold_sect(func, grad_func, eps):
+    x_k = -5
+    y_k = -2
+    num_of_func_call = 0
+    numb_of_iter = 0 
+    norms_grad = []
     grad = grad_func(x_k, y_k)
     while(True):
-        if((grad[0]**2 + grad[1]**2)**0.5 < eps):
-            return x_k, y_k
-        alpha_k = dichotomy_method(func, eps, grad, [x_k, y_k])[0]
+        norm_grad = (grad[0]**2 + grad[1]**2)**0.5
+        norms_grad.append(norm_grad)
+        if(norm_grad < eps):
+            return x_k, y_k, num_of_func_call, numb_of_iter, norms_grad
+        result_find_alpha_k = golden_section_method(func, eps / 1000, grad, [x_k, y_k])
+        alpha_k = result_find_alpha_k[0]
+        num_of_func_call += result_find_alpha_k[1]
         x_k -= alpha_k * grad[0]
         y_k -= alpha_k * grad[1]
         grad = grad_func(x_k, y_k)
+        numb_of_iter += 1
 
 
 
 
+# eps_set = [10e-2, 10e-3, 10e-4, 10e-5, 10e-6, 10e-7, 10e-8]
 
+# n_gold_sect, n_dich = [], []
 
+# for eps in eps_set:
+#     n_gold_sect.append(method_of_steepest_descent_gold_sect(f, grad_f, eps)[2])
+#     n_dich.append(method_of_steepest_descent_dich(f, grad_f, eps)[2])
 
+# plt.figure()
+# plt.semilogx(eps_set, n_gold_sect,  linewidth=0.5, label = "golden section method")
+# plt.semilogx(eps_set, n_dich, linewidth=0.5, label = "dichotomy method")
+# plt.legend()
+# plt.xlabel("eps")
+# plt.ylabel("number of call function")
+# plt.title("Зависимость числа вызовов функции от точности")
+# plt.show()
 
 
 x, y = np.meshgrid(np.linspace(-5, 1, 1000), np.linspace(-2, 1.5, 1000))
 
-result = method_of_steepest_descent(f, grad_f, 10e-7)
+result = method_of_steepest_descent_gold_sect(f, grad_f, 10e-7)
 
 print(f'[{result[0]}, {result[1]}]')
-
 
 z = f(x, y)
 plt.figure()
 plt.contour(x, y, z, 20)
 plt.scatter(result[0], result[1])
+plt.show()
+
+numb_of_iter = np.linspace(0, result[3], result[3] + 1)
+
+plt.figure()
+plt.semilogy(numb_of_iter, result[4])
+plt.xlabel("number of iteration")
+plt.ylabel("gradient norm")
+plt.title("Норма градиента от номера итерации")
 plt.show()
 
 # fig = plt.figure(figsize=(7, 4))
