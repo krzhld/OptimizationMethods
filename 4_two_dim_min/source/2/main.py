@@ -23,10 +23,14 @@ def hess_f(x,y):
 def grad_f_1(x, y):
     return 2 * (x - 2), 2 * (y + 3)
 
+def hess_f_1(x,y):
+    return [[2, 0], [0, 2]]
 
 def grad_f_2(x, y):
     return 1 + (8 * x) / math.sqrt(1 + 2 * x**2 + 3 * y**2) , 1 + (12 * y) / math.sqrt(1 + 2 * x**2 + 3 * y**2) 
 
+def hess_f_2(x,y):
+    return [[8 * (2 * x**2 + 3 * y**2 + 1)**(-0.5) - 16 * x**2 * (2 * x**2 + 3 * y**2 + 1)**(-1.5), -24 * x * y * (2 * x**2 + 3 * y**2 + 1)**(-1.5) ], [-24 * x * y * (2 * x**2 + 3 * y**2 + 1)**(-1.5), 12 * (2 * x**2 + 3 * y**2 + 1)**(-0.5) - 36 * y**2 * (2 * x**2 + 3 * y**2 + 1)**(-1.5)]]
 
 alpha = (3 - 5 ** 0.5) / 2
 
@@ -41,22 +45,22 @@ def mult_vectors(v1 : list, v2 : list) -> float:
     return v1[0] * v2[0] + v1[1] * v2[1]
 
 def newton_method(func, grad_func, hess_func, eps):
-    x_k = 15
-    y_k = 2
+    x_k = -1
+    y_k = 1
     alpha_0 = 1
     delta = 0.5 
     lambd = 0.5 
 
     while(True):
-        plt.scatter(x_k, y_k)
+        # plt.scatter(x_k, y_k)
         grad = grad_func(x_k, y_k)
         norm_grad = (grad[0]**2 + grad[1]**2)**0.5
         if(norm_grad < eps):
             return x_k, y_k 
         
-        # print(f'{norm_grad}')
+        print(f'{norm_grad}')
         d_k = np.array(mult_matrix_and_vector(np.linalg.inv(hess_func(x_k,y_k)), grad)) 
-        alpha_k = 0.01 
+        # alpha_k = 0.01 
         alpha_k = alpha_0
 
         f = func(x_k - alpha_k * d_k[0], y_k - alpha_k * d_k[1])
@@ -66,8 +70,6 @@ def newton_method(func, grad_func, hess_func, eps):
 
             f = func(x_k - alpha_k * d_k[0], y_k - alpha_k * d_k[1])
             
-
-        # alpha_0 = alpha_k 
         x_k -= alpha_k * d_k[0] 
         y_k -= alpha_k * d_k[1]
 
@@ -76,21 +78,16 @@ def newton_method(func, grad_func, hess_func, eps):
 
 x, y = np.meshgrid(np.linspace(-4, 1, 1000), np.linspace(-1.5, 1, 1000))
 
-
+# x, y = np.meshgrid(np.linspace(-5, 5, 1000), np.linspace(-5, 5, 1000))
 
 
 # print(f'[{result[0]}, {result[1]}]')
 
-h = np.array(hess_f(1, 1))
-hinv = np.array(np.linalg.inv(h))
 
-print(f'{h}')
-print(f'{hinv}')
-print(f'{h * hinv}')
 
-z = f(x, y)
+z = f_2(x, y)
 plt.figure()
 plt.contour(x, y, z, 50)
-result = newton_method(f, grad_f, hess_f, 10e-6)
+result = newton_method(f, grad_f, hess_f, 10e-4)
 plt.scatter(result[0], result[1])
 plt.show()
