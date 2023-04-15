@@ -105,9 +105,14 @@ def dichotomy_method(func, eps : float, grad : list, x : list):
 #         y_k -= alpha_k * grad[1]
 #         grad = grad_func(x_k, y_k)
 
+x_true = [-1.635575672731708, -0.24490976121576505]
+f_true = f(x_true[0], x_true[1])
+m = 2
+M = 51
+coef = m * (1 + m / M)
 def method_of_steepest_descent_gold_sect(func, grad_func, eps):
-    x_k = -5
-    y_k = -2
+    x_k = 1
+    y_k = 1
     num_of_func_call = 0
     numb_of_iter = 0 
     norms_grad = []
@@ -120,8 +125,13 @@ def method_of_steepest_descent_gold_sect(func, grad_func, eps):
         result_find_alpha_k = golden_section_method(func, eps / 1000, grad, [x_k, y_k])
         alpha_k = result_find_alpha_k[0]
         num_of_func_call += result_find_alpha_k[1]
+        q = 1 - eps * alpha_k * coef
+        func_k = func(x_k, y_k)
         x_k -= alpha_k * grad[0]
         y_k -= alpha_k * grad[1]
+        func_k_plus_1 = func(x_k, y_k)
+        print(f"{func_k_plus_1 - f_true} <= {q * (func_k - f_true)}, {(func_k_plus_1 - f_true) <= q * (func_k - f_true)}")
+        print(q)
         grad = grad_func(x_k, y_k)
         numb_of_iter += 1
 
@@ -146,15 +156,16 @@ def method_of_steepest_descent_gold_sect(func, grad_func, eps):
 # plt.show()
 
 
-x, y = np.meshgrid(np.linspace(-5, 1, 1000), np.linspace(-2, 1.5, 1000))
+x, y = np.meshgrid(np.linspace(-4, 1, 1000), np.linspace(-1.5, 1, 1000))
+# x, y = np.meshgrid(np.linspace(-2, 2, 1000), np.linspace(-2, 2, 1000))
 
-result = method_of_steepest_descent_gold_sect(f, grad_f, 10e-7)
+result = method_of_steepest_descent_gold_sect(f, grad_f, 0.1)
 
-print(f'[{result[0]}, {result[1]}]')
+# print(f'[{result[0]}, {result[1]}]')
 
 z = f(x, y)
 plt.figure()
-plt.contour(x, y, z, 20)
+plt.contour(x, y, z, 50)
 plt.scatter(result[0], result[1])
 plt.show()
 
@@ -167,7 +178,7 @@ plt.ylabel("gradient norm")
 plt.title("Норма градиента от номера итерации")
 plt.show()
 
-# fig = plt.figure(figsize=(7, 4))
-# ax_3d = fig.add_subplot(projection='3d')
-# ax_3d.plot_wireframe(x, y, z)
-# plt.show()
+fig = plt.figure(figsize=(7, 4))
+ax_3d = fig.add_subplot(projection='3d')
+ax_3d.plot_wireframe(x, y, z)
+plt.show()
