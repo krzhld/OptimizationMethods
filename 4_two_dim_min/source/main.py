@@ -34,6 +34,9 @@ M = 51
 coef = m * (1 + m / M)
 alpha = (3 - 5 ** 0.5) / 2
 
+def norm(x, y):
+    return (x**2 + y**2)**0.5 
+
 
 # def condition(a, b, f_1, f_2, grad, eps):
 #     norm_grad_sq = (grad[0]**2 + grad[1]**2)
@@ -119,6 +122,11 @@ def dichotomy_method(func, eps : float, grad : list, x : list):
 #         y_k -= alpha_k * grad[1]
 #         grad = grad_func(x_k, y_k)
 
+x_true = [-1.648506648824617,-0.23712666219807224]
+f_true = f(x_true[0], x_true[1])
+m = 2
+M = 51
+coef = m * (1 + m / M)
 def method_of_steepest_descent_gold_sect(func, grad_func, eps):
     x_k = -1
     y_k = -1
@@ -126,21 +134,30 @@ def method_of_steepest_descent_gold_sect(func, grad_func, eps):
     numb_of_iter = 0 
     norms_grad = []
     grad = grad_func(x_k, y_k)
+    alpha = 0 # скорость сходимости 
     while(True):
         norm_grad = (grad[0]**2 + grad[1]**2)**0.5
         norms_grad.append(norm_grad)
         if(norm_grad < eps):
-            return x_k, y_k, num_of_func_call, numb_of_iter, norms_grad
+            return x_k, y_k, num_of_func_call, numb_of_iter, norms_grad, alpha
         result_find_alpha_k = golden_section_method(func, eps, grad, [x_k, y_k])
         alpha_k = result_find_alpha_k[0]
         num_of_func_call += result_find_alpha_k[1]
-        q = 1 - eps * alpha_k * coef
-        func_k = func(x_k, y_k)
-        x_k -= alpha_k * grad[0]
-        y_k -= alpha_k * grad[1]
-        func_k_plus_1 = func(x_k, y_k)
-        print(f"{func_k_plus_1 - f_true} <= {q * (func_k - f_true)}, {(func_k_plus_1 - f_true) <= q * (func_k - f_true)}")
-        print(q)
+
+        x_k_1 = x_k - alpha_k * grad[0]
+        y_k_1 = y_k - alpha_k * grad[1] 
+
+        alpha_iter = norm(x_k_1 - x_true[0], y_k_1 - x_true[1]) / norm(x_k - x_true[0], y_k - x_true[1])
+        if alpha_iter > alpha:
+            alpha = alpha_iter
+        
+        # q = 1 - eps * alpha_k * coef
+        # func_k = func(x_k, y_k)
+        x_k = x_k_1
+        y_k = y_k_1
+        # func_k_plus_1 = func(x_k, y_k)
+        # print(f"{func_k_plus_1 - f_true} <= {q * (func_k - f_true)}, {(func_k_plus_1 - f_true) <= q * (func_k - f_true)}")
+        # print(q)
         grad = grad_func(x_k, y_k)
         numb_of_iter += 1
 
@@ -168,7 +185,7 @@ def method_of_steepest_descent_gold_sect(func, grad_func, eps):
 x, y = np.meshgrid(np.linspace(-2, -0.5, 1000), np.linspace(-1.5, 0.5, 1000))
 # x, y = np.meshgrid(np.linspace(-2, 2, 1000), np.linspace(-2, 2, 1000))
 
-result = method_of_steepest_descent_gold_sect(f, grad_f, 0.01)
+result = method_of_steepest_descent_gold_sect(f, grad_f, 10e-4)
 
 # print(f'[{result[0]}, {result[1]}]')
 
@@ -183,6 +200,8 @@ plt.show()
 
 
 numb_of_iter = np.linspace(0, result[3], result[3] + 1)
+print(f'result: [{result[0]},{result[1]}]')
+print(f'alpha = {result[5]}')
 
 plt.figure()
 plt.semilogy(numb_of_iter, result[4])
@@ -195,3 +214,6 @@ fig = plt.figure(figsize=(7, 4))
 ax_3d = fig.add_subplot(projection='3d')
 ax_3d.plot_wireframe(x, y, z)
 plt.show()
+
+
+#Для точности 10e-4 число alpha = 0.8633771218764044, что означает линейную скорость сходимости метода 
