@@ -15,6 +15,13 @@ def mult_matrix_and_vector(A, b) -> list:
 def mult_vectors(v1: list, v2: list) -> float:
     return v1[0] * v2[0] + v1[1] * v2[1]
 
+#обращение матрицы размером 2 на 2
+def inv(matrix):
+    coef = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]
+    return [[matrix[1][1] / coef, 
+             - matrix[0][1] / coef],
+             [- matrix[1][0] / coef, 
+              matrix[0][0] / coef]]
 
 def newton_method(func, grad_func, hess_func, eps):
     x_k = -1
@@ -31,7 +38,7 @@ def newton_method(func, grad_func, hess_func, eps):
             return x_k, y_k, numb_of_iter 
         
         print(f'{norm_grad}')
-        d_k = np.array(mult_matrix_and_vector(np.linalg.inv(hess_func(x_k, y_k)), grad))
+        d_k = np.array(mult_matrix_and_vector(inv(hess_func(x_k, y_k)), grad))
         alpha_k = alpha_0
 
         F = func(x_k - alpha_k * d_k[0], y_k - alpha_k * d_k[1])
