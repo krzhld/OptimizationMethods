@@ -3,4 +3,4 @@ import first_order as first
 import functions as f
 
 if __name__ == '__main__':
-    first.plot_and_solve()
+    second.plot_and_solve()
