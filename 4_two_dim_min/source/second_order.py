@@ -15,13 +15,15 @@ def mult_matrix_and_vector(A, b) -> list:
 def mult_vectors(v1: list, v2: list) -> float:
     return v1[0] * v2[0] + v1[1] * v2[1]
 
-#обращение матрицы размером 2 на 2
+
+# Обращение матрицы размером 2 на 2
 def inv(matrix):
     coef = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]
     return [[matrix[1][1] / coef, 
              - matrix[0][1] / coef],
              [- matrix[1][0] / coef, 
               matrix[0][0] / coef]]
+
 
 def newton_method(func, grad_func, hess_func, eps):
     x_k = -1
@@ -60,18 +62,18 @@ def plot_and_solve():
     z = f.f(x, y)
     plt.figure()
     plt.contour(x, y, z, 50)
-    result = newton_method(f.f, f.grad_f, f.hess_f, 10e-4)
+    result = newton_method(f.f, f.grad_f, f.hess_f, 1e-3)
     plt.scatter(result[0], result[1])
     plt.show()
 
     print(f'Newton: [{result[0]}, {result[1]}]')
 
-    result1 = first.method_of_steepest_descent(f.f, f.grad_f, 10e-4)
+    result1 = first.method_of_steepest_descent(f.f, f.grad_f, 1e-3)
     print(f'Gradient: [{result1[0]}, {result1[1]}]')
 
 
 def compare_grad_and_newton():
-    epsilons = [1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8]
+    epsilons = [1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8, 1e-9]
     result_1, result_2 = [], []
 
     for eps in epsilons:
@@ -87,4 +89,3 @@ def compare_grad_and_newton():
     plt.ylabel("number of iterations")
     plt.title("Зависимость числа итераций от точности")
     plt.show()
-
