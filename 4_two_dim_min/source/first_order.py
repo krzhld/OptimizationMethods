@@ -4,7 +4,7 @@ from mpl_toolkits.mplot3d import axes3d as ax, Axes3D
 import functions as f
 
 
-x_true = [-1.635575672731708, -0.24490976121576505]
+x_true = [-1.6485182458359122, -0.237208240893562]
 f_true = f.f(x_true[0], x_true[1])
 m = 2
 M = 51
@@ -31,10 +31,8 @@ def golden_section_method(func, eps: float, grad: list, x: list):
     func_alpha_2 = 10e10
     alpha_2_flag = 1  # флаг, что alpha_2 нужно пересчитать
     alpha_1_flag = 1  # флаг, что alpha_1 нужно пересчитать
-    N = 100
-    while N != 0:
-        # if condition(a, b, func_alpha_1, func_alpha_2, eps):
-        if abs(b - a) < eps:
+    while True:
+        if abs(b - a) < eps / 1000:
             return (a + b) / 2, n
         if alpha_1_flag == 1:
             alpha_1 = a + alpha * (b - a)
@@ -60,7 +58,6 @@ def golden_section_method(func, eps: float, grad: list, x: list):
             alpha_1_flag = 1
             alpha_2_flag = 0
 
-        N = N - 1
 
 
 def dichotomy_method(func, eps: float, grad: list, x: list):
@@ -101,28 +98,30 @@ def method_of_steepest_descent(func, grad_func, eps, method=golden_section_metho
         result_find_alpha_k = method(func, eps, grad, [x_k, y_k])
         alpha_k = result_find_alpha_k[0]
         num_of_func_call += result_find_alpha_k[1]
+        print(f'||x_k - x_*|| = {((x_k - x_true[0]) ** 2 + (y_k - x_true[1]) ** 2) ** 0.5}')
+
+        x_k_prev = x_k
+        y_k_prev = y_k
+
         x_k -= alpha_k * grad[0]
         y_k -= alpha_k * grad[1]
 
-        x_k_1 = x_k - alpha_k * grad[0]
-        y_k_1 = y_k - alpha_k * grad[1]
-        alpha_iter = f.norm(x_k_1 - x_true[0], y_k_1 - x_true[1]) / f.norm(x_k - x_true[0], y_k - x_true[1])
-        if alpha_iter > alpha:
-            alpha = alpha_iter
+        # alpha_iter = f.norm(x_k_1 - x_true[0], y_k_1 - x_true[1]) / f.norm(x_k - x_true[0], y_k - x_true[1])
+        # if alpha_iter > alpha:
+        #     alpha = alpha_iter
 
         q = 1 - eps * alpha_k * coef
         func_k = func(x_k, y_k)
-        x_k = x_k_1
-        y_k = y_k_1
-        func_k_plus_1 = func(x_k, y_k)
-        print(f"{func_k_plus_1 - f_true} <= {q * (func_k - f_true)}, {(func_k_plus_1 - f_true) <= q * (func_k - f_true)}")
-        print(q)
+        func_k_prev = func(x_k_prev, y_k_prev)
+        print(f"{(func_k - f_true) / (func_k_prev - f_true)} <= {q}, {(func_k - f_true) / (func_k_prev - f_true) <= q}")
+        print(f"q = {q}")
+        print()
         numb_of_iter += 1
         grad = grad_func(x_k, y_k)
 
 
 def compare_dich_golden_section():
-    eps_set = [10e-5, 10e-6, 10e-7, 10e-8, 10e-9]
+    eps_set = [1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8, 1e-9]
     n_gold_sect, n_dich = [], []
     for eps in eps_set:
         n_gold_sect.append(method_of_steepest_descent(f.f, f.grad_f, eps, golden_section_method)[2])
@@ -139,17 +138,18 @@ def compare_dich_golden_section():
 
 
 def plot_and_solve():
-    x, y = np.meshgrid(np.linspace(-2, -0.5, 1000), np.linspace(-1.5, 0.5, 1000))
-    # x, y = np.meshgrid(np.linspace(-2, 2, 1000), np.linspace(-2, 2, 1000))
-    result = method_of_steepest_descent(f.f, f.grad_f, 10e-2, golden_section_method)
+    # x, y = np.meshgrid(np.linspace(-2, -0.5, 1000), np.linspace(-5, 0.5, 1000))
+    x, y = np.meshgrid(np.linspace(-2, 2, 1000), np.linspace(-2, 2, 1000))
+    result = method_of_steepest_descent(f.f, f.grad_f, 10e-5)
 
-    # print(f'[{result[0]}, {result[1]}]')
+    print(f'first order: [{result[0]}, {result[1]}]')
 
     z = f.f(x, y)
     plt.figure()
     plt.contour(x, y, z, 20)
-    plt.scatter(result[0], result[1])
-    plt.scatter(-1, -1, color='red')
+    # plt.scatter(-1, -1, color='red')
+    plt.scatter(result[0], result[1], color='blue')
+    # plt.scatter(-1, -f.SQRT_5, color='red')
     plt.xlabel('x')
     plt.ylabel('y')
     plt.show()
@@ -160,7 +160,7 @@ def plot_and_solve():
 
 
 def norm_grad():
-    result = method_of_steepest_descent(f.f, f.grad_f, 10e-4, golden_section_method)
+    result = method_of_steepest_descent(f.f, f.grad_f, 10e-5, golden_section_method)
 
     numb_of_iter = np.linspace(0, result[3], result[3] + 1)
     print(f'result: [{result[0]},{result[1]}]')

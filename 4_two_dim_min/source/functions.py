@@ -1,28 +1,22 @@
 import numpy as np
 
-
-def f_1(x: float, y: float):
-    return np.power((x - 2), 2) + np.power((y + 3), 2)
-
-
-def f_2(x: float, y: float):
-    return x + y + 4 * np.sqrt(1 + 2 * np.power(x, 2) + 3 * np.power(y, 2))
+SQRT_5 = 2.23606797749978
 
 
 def f(x: float, y: float):
     return np.power(x, 2) + 5 * np.power(y, 2) + np.sin(4 * x + 5 * y) + 3 * x + 2 * y
 
 
+def f_zoom(x: float, y: float):
+    return np.power(x, 2) + np.power(y, 2) + np.sin(4 * x + SQRT_5 * y) + 3 * x + 2 * y / SQRT_5
+
+
 def grad_f(x: float, y: float):
     return 2 * x + 4 * np.cos(4 * x + 5 * y) + 3, 10 * y + 5 * np.cos(4 * x + 5 * y) + 2
 
 
-def grad_f_1(x: float, y: float):
-    return 2 * (x - 2), 2 * (y + 3)
-
-
-def grad_f_2(x: float, y: float):
-    return 1 + (8 * x) / np.sqrt(1 + 2 * x ** 2 + 3 * y ** 2), 1 + (12 * y) / np.sqrt(1 + 2 * x ** 2 + 3 * y ** 2)
+def grad_f_zoom(x: float, y: float):
+    return 2 * x + 4 * np.cos(4 * x + SQRT_5 * y) + 3, 2 * y + SQRT_5 * np.cos(4 * x + SQRT_5 * y) + 2 / SQRT_5
 
 
 def hess_f(x: float, y: float):
@@ -30,15 +24,9 @@ def hess_f(x: float, y: float):
             [-20 * np.sin(4 * x + 5 * y), 10 - 25 * np.sin(4 * x + 5 * y)]]
 
 
-def hess_f_1(x: float, y: float):
-    return [[2, 0], [0, 2]]
-
-
-def hess_f_2(x: float, y: float):
-    return [[8 * (2 * x ** 2 + 3 * y ** 2 + 1) ** (-0.5) - 16 * x ** 2 * (2 * x ** 2 + 3 * y ** 2 + 1) ** (-1.5),
-             -24 * x * y * (2 * x ** 2 + 3 * y ** 2 + 1) ** (-1.5)],
-            [-24 * x * y * (2 * x ** 2 + 3 * y ** 2 + 1) ** (-1.5),
-             12 * (2 * x ** 2 + 3 * y ** 2 + 1) ** (-0.5) - 36 * y ** 2 * (2 * x ** 2 + 3 * y ** 2 + 1) ** (-1.5)]]
+def hess_f_zoom(x: float, y: float):
+    return [[2 - 16 * np.sin(4 * x + SQRT_5 * y), -4 * SQRT_5 * np.sin(4 * x + SQRT_5 * y)],
+            [-4 * SQRT_5 * np.sin(4 * x + SQRT_5 * y), 2 - 5 * np.sin(4 * x + SQRT_5 * y)]]
 
 
 def norm(x: float, y: float):
