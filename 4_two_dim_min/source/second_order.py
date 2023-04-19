@@ -5,7 +5,12 @@ import functions as f
 import first_order as first
 
 
+x_true = [-1.6485182458359122, -0.237208240893562]
+f_true = f.f(x_true[0], x_true[1])
+
 alpha = (3 - 5 ** 0.5) / 2
+
+const = 290 / 2
 
 
 def mult_matrix_and_vector(A, b) -> list:
@@ -39,7 +44,7 @@ def newton_method(func, grad_func, hess_func, eps):
         if norm_grad < eps:
             return x_k, y_k, numb_of_iter 
         
-        print(f'{norm_grad}')
+        # print(f'{norm_grad}')
         d_k = np.array(mult_matrix_and_vector(inv(hess_func(x_k, y_k)), grad))
         alpha_k = alpha_0
 
@@ -49,9 +54,15 @@ def newton_method(func, grad_func, hess_func, eps):
             alpha_k *= lambd
 
             F = func(x_k - alpha_k * d_k[0], y_k - alpha_k * d_k[1])
-            
+
+        x_k_prev = x_k
+        y_k_prev = y_k
+
         x_k -= alpha_k * d_k[0] 
         y_k -= alpha_k * d_k[1]
+
+        print(f" ||x_k+1 - x_*|| / ||x_k - x_*||^2 =  {f.norm(x_k - x_true[0], y_k - x_true[1]) / (f.norm(x_k_prev - x_true[0], y_k_prev - x_true[1])) ** 2},")
+
         numb_of_iter += 1
 
 
@@ -63,12 +74,13 @@ def plot_and_solve():
     plt.figure()
     plt.contour(x, y, z, 50)
     result = newton_method(f.f, f.grad_f, f.hess_f, 1e-3)
-    plt.scatter(result[0], result[1])
+    plt.scatter(result[0], result[1], color='red')
     plt.show()
 
     print(f'Newton: [{result[0]}, {result[1]}]')
 
     result1 = first.method_of_steepest_descent(f.f, f.grad_f, 1e-3)
+    plt.scatter(result1[0], result1[1], color='blue')
     print(f'Gradient: [{result1[0]}, {result1[1]}]')
 
 
