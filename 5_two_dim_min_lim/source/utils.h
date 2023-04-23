@@ -16,6 +16,12 @@ typedef vector<double> column_t;
 /*матрица вещественных чисел*/
 typedef vector<column_t> matrix_t;
 
+/*кортеж из матрицы и вектора, определяющих многогранное множество*/
+typedef tuple<matrix_t, column_t> polyhedron_t;
+
+/*кортеж из данных гиперплоскости*/
+typedef tuple<column_t, double> hyperplane_t;
+
 /*Перемножение транспонированного вектора на вектор
 * Вход: два вектора
 * Выход: число

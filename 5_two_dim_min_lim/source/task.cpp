@@ -92,3 +92,14 @@ int Task::Index(column_t x)
 
 	return result; 
 }
+
+polyhedron_t Task::GetS0()
+{
+	matrix_t A; // матрица A, определ¤юща¤ многогранное множество
+	A = { {3,2,0}, {-10,7,0}, {0,0,-1}, {0,-1,0}, {0,0,1} };
+
+	column_t b; //столбец b, определ¤ющий многограное множество
+	b = { -4, 16, 3.5, 0.7, 0 };
+
+	return make_tuple(A, b);
+}

@@ -40,15 +40,15 @@ polyhedron_t AddCuttingHiperplaneInPolyhedron(polyhedron_t Sk, hyperplane_t h)
 }
 
 
-solving_t CuttingHyperplaneMethod(column_t x0, polyhedron_t S0, Task t, double eps)
+solving_t CuttingHyperplaneMethod(Task t, double eps)
 {
-	column_t xk, yk;
-	polyhedron_t Sk = S0;
+	column_t xprev, xk, yk;
+	polyhedron_t Sk = t.GetS0(); //первончальное множество, содержащее исходное множество точек
 	tie(xk, yk) = SolvingLinearProblemInFirstIter(t, Sk); //ищем решение прямой и двойственной задачи на первой итерации без использования решения двойственной задачи с прошлой итерации
 	
-	while (Norm(DiffVector(xk, x0)) > eps)
+	do
 	{
-		x0 = xk;
+		xprev = xk;
 		hyperplane_t cuttHyperplane = GetCuttingHyperplane(xk, t); //ищем отсекающую гиперплоскость 
 
 		Sk = AddCuttingHiperplaneInPolyhedron(Sk, cuttHyperplane); //добавляем отсекающую гиперплоскость в множество ограничений задачи ЛП
@@ -58,7 +58,7 @@ solving_t CuttingHyperplaneMethod(column_t x0, polyhedron_t S0, Task t, double e
 		column_t xk, yk;
 		tie(xk, yk) = solvingLinearProblem; 
 
-	}
+	} while (Norm(DiffVector(xk, xprev)) > eps);
 
 	column_t result_column = xk;
 	double result = t.MinFunc(result_column);

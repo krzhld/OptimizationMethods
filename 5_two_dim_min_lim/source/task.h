@@ -17,6 +17,7 @@ class Task
 {
 public:
 
+
 	/*минимизуруемая функция*/
 	double MinFunc(column_t x);
 
@@ -25,6 +26,9 @@ public:
 
 	/*субградиент функции - ограничения*/
 	column_t SubgradientLim(column_t x);
+
+	/*Многогранное множество, содержащее исходное множество точек*/
+	polyhedron_t GetS0();
 
 private:
 
