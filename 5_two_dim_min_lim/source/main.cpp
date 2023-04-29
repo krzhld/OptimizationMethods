@@ -1,3 +1,6 @@
-int main(void) {
-	return 0;
+#include "task.h"
+
+int main()
+{
+	;
 }
