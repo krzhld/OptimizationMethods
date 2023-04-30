@@ -69,7 +69,7 @@ void NormalizeVector(column_t& X) {
 // Nk_indexes - индексы базисных столбцов
 SimplexState IterSimplex(matrix_t& main_A, comb_t& Nk_indexes, column_t& main_C, column_t& cur_X, column_t& cur_Y) {
 	
-	/*cout << endl << "Итерация:" << endl;
+	cout << endl << "Итерация:" << endl;
 	cout << "Индексы базиса: ";
 	for (auto temp : Nk_indexes)
 		cout << temp << " ";
@@ -79,7 +79,7 @@ SimplexState IterSimplex(matrix_t& main_A, comb_t& Nk_indexes, column_t& main_C,
 	cout << endl << "Текущий y: ";
 	for (auto temp : cur_Y)
 		cout << temp << " ";
-	cout << endl;*/
+	cout << endl;
 
 	int M_number = main_A.size();
 	int N_number = main_C.size();

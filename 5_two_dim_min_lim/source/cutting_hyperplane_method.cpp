@@ -1,19 +1,78 @@
+#include "simplex.h"
 #include "cutting_hyperplane_method.h"
 
 
-solving_linear_problem_t SolvingLinearProblemInFirstIter(Task t, polyhedron_t Sk)
-{
-	//ÐºÐ¸Ñ€Ð¸ÐµÑˆÐºÐ° - Ð²Ð°Ñˆ Ð²Ñ‹Ñ…Ð¾Ð´
+solving_linear_problem_t SolvingLinearProblemInFirstIter(Task& t) {
+	polyhedron_t polyhedron = t.GetS0();
+	matrix_t A0;
+	column_t b;
+	tie(A0, b) = polyhedron;
+	
+	column_t c = { 0, 0, 0, 0, 1, -1 };
+	int l = b.size();
+
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < l; j++) {
+			A0[j].resize(3 + 3);
+			A0[j][3 + i] = -A0[j][i];
+		}
+	}
+
+	for (int i = 0; i < l; i++)
+		c.push_back(0);
+
+
+	for (int i = 0; i < l; i++) {
+		A0[i].resize(3 + 3 + l);
+		A0[i][3 + 3 + i] = 1;
+	}
+	
+	column_t x, y;
+	int temp;
+	comb_t basis;
+
+	matrix_t A(3 + 3 + l);
+	for (int i = 0; i < 3 + 3 + l; ++i) {
+		A[i].resize(l);
+		for (int j = 0; j < l; ++j) {
+			A[i][j] = A0[j][i];
+		}
+	}
+	A0.clear();
+	canon_problem_t canon_problem = make_tuple(A, b, c);
+
+	tie(temp, x, y, basis) = SolveProblemWithSimplexMethod(canon_problem);
+	
+	for (int i = 0; i < 3; i++) {
+		x[i] = x[2 * i] + x[2 * i + 1];
+	}
+	x.resize(3);
+
+	return make_tuple(x, y, basis);
 }
 
-solving_linear_problem_t SolvingLinearProblem(Task t, polyhedron_t Sk, column_t yk)
-{
-	//ÐºÐ¸Ñ€Ð¸ÐµÑˆÐºÐ° - Ð²Ð°Ñˆ Ð²Ñ‹Ñ…Ð¾Ð´
+solving_linear_problem_t SolvingLinearProblem(Task& t, polyhedron_t& Sk, column_t& yk, comb_t basis) {
+	canon_problem_t canon_problem;
+	matrix_t A;
+	column_t b;
+
+	for (int i = 0; i < b.size(); i++)
+		b[i] *= -1;
+
+	tie(A, b) = Sk;
+	column_t c = { 0, 0, -1 };
+
+	canon_problem = make_tuple(A, c, b);
+
+	column_t x, y;
+	int res;
+	tie(res, y, x, basis) = SimplexMethod(canon_problem, yk, basis);
+
+	return make_tuple(y, x, basis);
 }
 
-hyperplane_t GetCuttingHyperplane(column_t xk, Task t)
-{
-	column_t subgrk = t.SubgradientLim(xk); // Ð¸Ñ‰ÐµÐ¼ ÑÑƒÐ±Ð³Ñ€Ð°Ð´Ð¸ÐµÐ½Ñ‚ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¸, Ð·Ð°Ð´Ð°ÑŽÑ‰ÐµÐ¹ Ð¾Ð³Ñ€Ð°Ð½Ð¸Ñ‡ÐµÐ½Ð¸Ðµ 
+hyperplane_t GetCuttingHyperplane(column_t& xk, Task& t) {
+	column_t subgrk = t.SubgradientLim(xk); // èùåì ñóáãðàäèåíò ôóíêöèè, çàäàþùåé îãðàíè÷åíèå 
 
 	double bk = -t.Limit(xk) + MultiplipliedVectors(subgrk, xk); 
 
@@ -22,8 +81,7 @@ hyperplane_t GetCuttingHyperplane(column_t xk, Task t)
 	return result;
 }
 
-polyhedron_t AddCuttingHiperplaneInPolyhedron(polyhedron_t Sk, hyperplane_t h)
-{
+polyhedron_t AddCuttingHiperplaneInPolyhedron(polyhedron_t& Sk, hyperplane_t& h) {
 	matrix_t Ak;
 	column_t bk;
 	tie(Ak, bk) = Sk;
@@ -40,23 +98,39 @@ polyhedron_t AddCuttingHiperplaneInPolyhedron(polyhedron_t Sk, hyperplane_t h)
 }
 
 
-solving_t CuttingHyperplaneMethod(Task t, double eps)
-{
+solving_t CuttingHyperplaneMethod(Task& t, double eps) {
 	column_t xprev, xk, yk;
-	polyhedron_t Sk = t.GetS0(); //Ð¿ÐµÑ€Ð²Ð¾Ð½Ñ‡Ð°Ð»ÑŒÐ½Ð¾Ðµ Ð¼Ð½Ð¾Ð¶ÐµÑÑ‚Ð²Ð¾, ÑÐ¾Ð´ÐµÑ€Ð¶Ð°Ñ‰ÐµÐµ Ð¸ÑÑ…Ð¾Ð´Ð½Ð¾Ðµ Ð¼Ð½Ð¾Ð¶ÐµÑÑ‚Ð²Ð¾ Ñ‚Ð¾Ñ‡ÐµÐº
-	tie(xk, yk) = SolvingLinearProblemInFirstIter(t, Sk); //Ð¸Ñ‰ÐµÐ¼ Ñ€ÐµÑˆÐµÐ½Ð¸Ðµ Ð¿Ñ€ÑÐ¼Ð¾Ð¹ Ð¸ Ð´Ð²Ð¾Ð¹ÑÑ‚Ð²ÐµÐ½Ð½Ð¾Ð¹ Ð·Ð°Ð´Ð°Ñ‡Ð¸ Ð½Ð° Ð¿ÐµÑ€Ð²Ð¾Ð¹ Ð¸Ñ‚ÐµÑ€Ð°Ñ†Ð¸Ð¸ Ð±ÐµÐ· Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ð½Ð¸Ñ Ñ€ÐµÑˆÐµÐ½Ð¸Ñ Ð´Ð²Ð¾Ð¹ÑÑ‚Ð²ÐµÐ½Ð½Ð¾Ð¹ Ð·Ð°Ð´Ð°Ñ‡Ð¸ Ñ Ð¿Ñ€Ð¾ÑˆÐ»Ð¾Ð¹ Ð¸Ñ‚ÐµÑ€Ð°Ñ†Ð¸Ð¸
-	
-	do
-	{
+	comb_t basis, _;
+	polyhedron_t Sk = t.GetS0(); //ïåðâîíà÷àëüíîå ìíîæåñòâî, ñîäåðæàùåå èñõîäíîå ìíîæåñòâî òî÷åê
+	tie(xk, yk, _) = SolvingLinearProblemInFirstIter(t); //èùåì ðåøåíèå ïðÿìîé è äâîéñòâåííîé çàäà÷è íà ïåðâîé èòåðàöèè áåç èñïîëüçîâàíèÿ ðåøåíèÿ äâîéñòâåííîé çàäà÷è ñ ïðîøëîé èòåðàöèè
+	_.clear();
+
+	/*for (int i = 0; i < yk.size(); i++) {
+		if (yk[i] != 0)
+			basis.push_back(i + 1);
+	}
+	int temp = 1;
+	while (basis.size() < xk.size()) {
+		if (IsNumberInCombination(temp, basis))
+			temp++;
+		basis.push_back(temp);
+	}
+	sort(basis.begin(), basis.end());*/
+	basis.push_back(2);
+	basis.push_back(4);
+	basis.push_back(5);
+
+	do {
 		xprev = xk;
-		hyperplane_t cuttHyperplane = GetCuttingHyperplane(xk, t); //Ð¸Ñ‰ÐµÐ¼ Ð¾Ñ‚ÑÐµÐºÐ°ÑŽÑ‰ÑƒÑŽ Ð³Ð¸Ð¿ÐµÑ€Ð¿Ð»Ð¾ÑÐºÐ¾ÑÑ‚ÑŒ 
+		hyperplane_t cuttHyperplane = GetCuttingHyperplane(xk, t); //èùåì îòñåêàþùóþ ãèïåðïëîñêîñòü 
 
-		Sk = AddCuttingHiperplaneInPolyhedron(Sk, cuttHyperplane); //Ð´Ð¾Ð±Ð°Ð²Ð»ÑÐµÐ¼ Ð¾Ñ‚ÑÐµÐºÐ°ÑŽÑ‰ÑƒÑŽ Ð³Ð¸Ð¿ÐµÑ€Ð¿Ð»Ð¾ÑÐºÐ¾ÑÑ‚ÑŒ Ð² Ð¼Ð½Ð¾Ð¶ÐµÑÑ‚Ð²Ð¾ Ð¾Ð³Ñ€Ð°Ð½Ð¸Ñ‡ÐµÐ½Ð¸Ð¹ Ð·Ð°Ð´Ð°Ñ‡Ð¸ Ð›ÐŸ
+		Sk = AddCuttingHiperplaneInPolyhedron(Sk, cuttHyperplane); //äîáàâëÿåì îòñåêàþùóþ ãèïåðïëîñêîñòü â ìíîæåñòâî îãðàíè÷åíèé çàäà÷è ËÏ
 
-		solving_linear_problem_t solvingLinearProblem = SolvingLinearProblem(t, Sk, yk); //Ð¸Ñ‰ÐµÐ¼ Ñ€ÐµÑˆÐµÐ½Ð¸Ðµ Ð¿Ñ€ÑÐ¼Ð¾Ð¹ Ð¸ Ð´Ð²Ð¾Ð¹ÑÑ‚Ð²ÐµÐ½Ð½Ð¾Ð¹ Ð·Ð°Ð´Ð°Ñ‡Ð¸ Ð›ÐŸ
+		yk.push_back(0);
+		solving_linear_problem_t solvingLinearProblem = SolvingLinearProblem(t, Sk, yk, basis); //èùåì ðåøåíèå ïðÿìîé è äâîéñòâåííîé çàäà÷è ËÏ
 
-		column_t xk, yk;
-		tie(xk, yk) = solvingLinearProblem; 
+		// column_t xk, yk;
+		tie(yk, xk, basis) = solvingLinearProblem; 
 
 	} while (Norm(DiffVector(xk, xprev)) > eps);
 
