@@ -6,7 +6,7 @@ int main() {
 	setlocale(LC_ALL, "Russian");
 	double eps = 1e-3;
 	column_t x = CuttingHyperplaneMethod(t, eps);
-	cout << "Îïòèìàëüíàÿ òî÷êà: (" << x[0] << ", " << x[1] << ")" << endl;
-	cout << "Îïòèìàëüíîå çíà÷åíèå: " << x[2];
+	cout << "ÑœÐ¿Ñ‚Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð°Â¤ Ñ‚Ð¾Ñ‡ÐºÐ°: (" << x[0] << ", " << x[1] << ")" << endl;
+	cout << "ÑœÐ¿Ñ‚Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð¾Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ: " << x[2];
 	return 0;
 }

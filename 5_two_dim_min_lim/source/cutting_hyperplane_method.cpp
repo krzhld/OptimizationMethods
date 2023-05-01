@@ -70,7 +70,7 @@ solving_linear_problem_t SolvingLinearProblem(Task& t, polyhedron_t& Sk, column_
 }
 
 hyperplane_t GetCuttingHyperplane(column_t& xk, Task& t) {
-	column_t subgrk = t.SubgradientLim(xk); // ищем субградиент функции, задающей ограничение 
+	column_t subgrk = t.SubgradientLim(xk); // РёС‰РµРј СЃСѓР±РіСЂР°РґРёРµРЅС‚ С„СѓРЅРєС†РёРё, Р·Р°РґР°СЋС‰РµР№ РѕРіСЂР°РЅРёС‡РµРЅРёРµ 
 
 	double bk = -t.Limit(xk) + MultiplipliedVectors(subgrk, xk); 
 
@@ -99,23 +99,23 @@ polyhedron_t AddCuttingHiperplaneInPolyhedron(polyhedron_t& Sk, hyperplane_t& h)
 column_t CuttingHyperplaneMethod(Task& t, double eps) {
 	column_t xprev, xk, yk;
 	comb_t basis, _;
-	polyhedron_t Sk = t.GetS0(); //первоначальное множество, содержащее исходное множество точек
-	tie(xk, yk, _) = SolvingLinearProblemInFirstIter(t); //ищем решение прямой и двойственной задачи на первой итерации без использования решения двойственной задачи с прошлой итерации
+	polyhedron_t Sk = t.GetS0(); //РїРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅРѕРµ РјРЅРѕР¶РµСЃС‚РІРѕ, СЃРѕРґРµСЂР¶Р°С‰РµРµ РёСЃС…РѕРґРЅРѕРµ РјРЅРѕР¶РµСЃС‚РІРѕ С‚РѕС‡РµРє
+	tie(xk, yk, _) = SolvingLinearProblemInFirstIter(t); //РёС‰РµРј СЂРµС€РµРЅРёРµ РїСЂСЏРјРѕР№ Рё РґРІРѕР№СЃС‚РІРµРЅРЅРѕР№ Р·Р°РґР°С‡Рё РЅР° РїРµСЂРІРѕР№ РёС‚РµСЂР°С†РёРё Р±РµР· РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ СЂРµС€РµРЅРёСЏ РґРІРѕР№СЃС‚РІРµРЅРЅРѕР№ Р·Р°РґР°С‡Рё СЃ РїСЂРѕС€Р»РѕР№ РёС‚РµСЂР°С†РёРё
 	_.clear();
 
-	// Формируем базис для двойственной задачи
+	// Р¤РѕСЂРјРёСЂСѓРµРј Р±Р°Р·РёСЃ РґР»СЏ РґРІРѕР№СЃС‚РІРµРЅРЅРѕР№ Р·Р°РґР°С‡Рё
 	basis.push_back(1);
 	basis.push_back(3);
 	basis.push_back(6);
 
 	do {
 		xprev = xk;
-		hyperplane_t cuttHyperplane = GetCuttingHyperplane(xk, t); //ищем отсекающую гиперплоскость 
+		hyperplane_t cuttHyperplane = GetCuttingHyperplane(xk, t); //РёС‰РµРј РѕС‚СЃРµРєР°СЋС‰СѓСЋ РіРёРїРµСЂРїР»РѕСЃРєРѕСЃС‚СЊ 
 
-		Sk = AddCuttingHiperplaneInPolyhedron(Sk, cuttHyperplane); //добавляем отсекающую гиперплоскость в множество ограничений задачи ЛП
+		Sk = AddCuttingHiperplaneInPolyhedron(Sk, cuttHyperplane); //РґРѕР±Р°РІР»СЏРµРј РѕС‚СЃРµРєР°СЋС‰СѓСЋ РіРёРїРµСЂРїР»РѕСЃРєРѕСЃС‚СЊ РІ РјРЅРѕР¶РµСЃС‚РІРѕ РѕРіСЂР°РЅРёС‡РµРЅРёР№ Р·Р°РґР°С‡Рё Р›Рџ
 
 		yk.push_back(0);
-		solving_linear_problem_t solvingLinearProblem = SolvingLinearProblem(t, Sk, yk, basis); //ищем решение прямой и двойственной задачи ЛП
+		solving_linear_problem_t solvingLinearProblem = SolvingLinearProblem(t, Sk, yk, basis); //РёС‰РµРј СЂРµС€РµРЅРёРµ РїСЂСЏРјРѕР№ Рё РґРІРѕР№СЃС‚РІРµРЅРЅРѕР№ Р·Р°РґР°С‡Рё Р›Рџ
 
 		tie(yk, xk, basis) = solvingLinearProblem; 
 
