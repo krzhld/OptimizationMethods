@@ -19,7 +19,7 @@ int main(void) {
 	general_problem_t problem = FromFileConvertToGeneral("general_task_main.txt");
 
 	/*general_problem_t dual_problem = GetDualLinearProblem(problem);
-	// РїРѕСЃРєРѕР»СЊРєСѓ СЃРёРјРїР»РµРєСЃ РјРµС‚РѕРґ РёС‰РµС‚ РјРёРЅРёРјСѓРј, Р° РґРІ Р·Р°РґР°С‡Р° РЅР° РјР°РєСЃРёРјСѓРј, С‚Рѕ СѓРјРЅРѕР¶РёРј РЅР° -1 РєСЂРёС‚РµСЂРёР№ РєР°С‡РµСЃС‚РІР°
+	// поскольку симплекс метод ищет минимум, а дв задача на максимум, то умножим на -1 критерий качества
 	matrix_t dual_A; column_t dual_b, dual_c; int M1, N1;
 	tie(dual_A, dual_b, dual_c, M1, N1) = dual_problem;
 	for (int i = 0; i < dual_c.size(); ++i)
@@ -32,19 +32,19 @@ int main(void) {
 	comb_t basis;
 	tie(opt_value, X, Y, basis) = SolveProblemWithSimplexMethod(canon_problem);
 
-	cout << endl << "РћРїС‚РёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ: " << -opt_value << endl << endl;
+	cout << endl << "Оптимальное значение: " << -opt_value << endl << endl;
 
-	cout << "Р’РµРєС‚РѕСЂ, СЃРѕРѕР±С‰Р°СЋС‰РёР№ РѕРїС‚РёРјР°Р»СЊРЅРѕРµ СЂРµС€РµРЅРёРµ РїСЂСЏРјРѕР№ Р·Р°РґР°С‡Рµ: " << endl;
+	cout << "Вектор, сообщающий оптимальное решение прямой задаче: " << endl;
 	for (auto temp : X)
 		cout << temp << "\t";
 	cout << endl << endl;
 
-	cout << "Р’РµРєС‚РѕСЂ, СЃРѕРѕР±С‰Р°СЋС‰РёР№ РѕРїС‚РёРјР°Р»СЊРЅРѕРµ СЂРµС€РµРЅРёРµ РґРІРѕР№СЃС‚РІРµРЅРЅРѕР№ Р·Р°РґР°С‡Рµ: " << endl;
+	cout << "Вектор, сообщающий оптимальное решение двойственной задаче: " << endl;
 	for (auto temp : Y)
 		cout << temp << "\t";
 	cout << endl << endl;
 
-	cout << "РРЅРґРµРєСЃС‹ Р±Р°Р·РёСЃР°: " << endl;
+	cout << "Индексы базиса: " << endl;
 	for (auto temp : basis)
 		cout << temp << "\t";
 	cout << endl << endl;*/
@@ -56,19 +56,19 @@ int main(void) {
 	comb_t basis;
 	tie(opt_value, X, Y, basis) = SolveProblemWithSimplexMethod(canon_problem);
 
-	cout << endl << "РћРїС‚РёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ: " << opt_value << endl << endl;
+	cout << endl << "Оптимальное значение: " << opt_value << endl << endl;
 
-	cout << "Р’РµРєС‚РѕСЂ, СЃРѕРѕР±С‰Р°СЋС‰РёР№ РѕРїС‚РёРјР°Р»СЊРЅРѕРµ СЂРµС€РµРЅРёРµ РїСЂСЏРјРѕР№ Р·Р°РґР°С‡Рµ: " << endl;
+	cout << "Вектор, сообщающий оптимальное решение прямой задаче: " << endl;
 	for (auto temp : X)
 		cout << temp << "\t";
 	cout << endl << endl;
 
-	cout << "Р’РµРєС‚РѕСЂ, СЃРѕРѕР±С‰Р°СЋС‰РёР№ РѕРїС‚РёРјР°Р»СЊРЅРѕРµ СЂРµС€РµРЅРёРµ РґРІРѕР№СЃС‚РІРµРЅРЅРѕР№ Р·Р°РґР°С‡Рµ: " << endl;
+	cout << "Вектор, сообщающий оптимальное решение двойственной задаче: " << endl;
 	for (auto temp : Y)
 		cout << temp << "\t";
 	cout << endl << endl;
 
-	cout << "РРЅРґРµРєСЃС‹ Р±Р°Р·РёСЃР°: " << endl;
+	cout << "Индексы базиса: " << endl;
 	for (auto temp : basis)
 		cout << temp << "\t";
 	cout << endl << endl;
@@ -77,11 +77,11 @@ int main(void) {
 	
 
 
-	// Р—РђРџРРЎР¬ Р—РђР”РђР§Р Р’ РћР‘Р©Р•Рњ Р’РР”Р•
+	// ЗАПИСЬ ЗАДАЧИ В ОБЩЕМ ВИДЕ
 	general_problem_t problem = FromFileConvertToGeneral("general_task_main.txt");
 	matrix_t A; column_t b, c; int M1, N1;
 	tie(A, b, c, M1, N1) = problem;
-	cout << "РћР±С‰Р°СЏ Р·Р°РґР°С‡Р° Р›Рџ:" << endl << "РњР°С‚СЂРёС†Р° РєРѕСЌС„С„РёС†РёРµРЅС‚РѕРІ:" << endl;
+	cout << "Общая задача ЛП:" << endl << "Матрица коэффициентов:" << endl;
 	for (int i = 0; i < M1; ++i) {
 		for (int j = 0; j < A.size(); ++j) {
 			cout << A[j][i] << "\t";
@@ -96,18 +96,18 @@ int main(void) {
 		cout << "=\t" << b[i];
 		cout << endl;
 	}
-	cout << endl << "РљСЂРёС‚РµСЂРёР№ РєР°С‡РµСЃС‚РІР°:" << endl;
+	cout << endl << "Критерий качества:" << endl;
 	for (auto temp : c) {
 		cout << temp << "\t";
 	}
-	cout << endl << "РќРµРѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹ РїРµСЂРІС‹Рµ " << N1 << " РїРµСЂРµРј." << endl << endl << endl << endl << endl;
+	cout << endl << "Неотрицательны первые " << N1 << " перем." << endl << endl << endl << endl << endl;
 
 
 
-	// РџР Р•РћР‘Р РђР—РћР’РђРўР¬ РћР‘Р©РЈР® Р—РђР”РђР§РЈ Рљ РљРђРќРћРќРР§Р•РЎРљРћР™ 
+	// ПРЕОБРАЗОВАТЬ ОБЩУЮ ЗАДАЧУ К КАНОНИЧЕСКОЙ 
 	canon_problem_t canon_problem = ConvertGeneralToCanon(problem);
 	tie(A, b, c) = canon_problem;
-	cout << "РљР°РЅРѕРЅРёС‡РµСЃРєР°СЏ Р·Р°РґР°С‡Р° Р›Рџ:" << endl << "РњР°С‚СЂРёС†Р° РєРѕСЌС„С„РёС†РёРµРЅС‚РѕРІ:" << endl;
+	cout << "Каноническая задача ЛП:" << endl << "Матрица коэффициентов:" << endl;
 	for (int i = 0; i < A[0].size(); ++i) {
 		for (int j = 0; j < A.size(); ++j) {
 			cout << A[j][i] << "\t";
@@ -115,7 +115,7 @@ int main(void) {
 		cout << "=\t" << b[i];
 		cout << endl;
 	}
-	cout << endl << "РљСЂРёС‚РµСЂРёР№ РєР°С‡РµСЃС‚РІР°:" << endl;
+	cout << endl << "Критерий качества:" << endl;
 	for (auto temp : c) {
 		cout << temp << "\t";
 	}
@@ -123,39 +123,39 @@ int main(void) {
 
 
 
-	// РџРћР›РЈР§РР›Р Р Р•РЁР•РќРР• РџР РЇРњРћР™ Р—РђР”РђР§Р РњР•РўРћР”РћРњ РџР•Р Р•Р‘РћР Рђ РљР РђР™РќРРҐ РўРћР§Р•Рљ
+	// ПОЛУЧИЛИ РЕШЕНИЕ ПРЯМОЙ ЗАДАЧИ МЕТОДОМ ПЕРЕБОРА КРАЙНИХ ТОЧЕК
 	column_t Xtreme;
 	double res;
 	comb_t comb;
 	general_problem_t problem1 = FromFileConvertToGeneral("general_task_main1.txt");
 	canon_problem_t canon_problem1 = ConvertGeneralToCanon(problem1);
 	tie(Xtreme, res, comb) = IteratingThroughExtremePoints(canon_problem1);
-	cout << "Р РµС€РµРЅРёРµ РїСЂСЏРјРѕР№ Р·Р°РґР°С‡Рё РјРµС‚РѕРґРѕРј РїРµСЂРµР±РѕСЂР° РєСЂР°Р№РЅРёС… С‚РѕС‡РµРє:" << endl;
-	cout << "РћРїС‚РёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ: " << -res << endl;
-	cout << "РћРїС‚РёРјР°Р»СЊРЅР°СЏ С‚РѕС‡РєР°: " << endl;
+	cout << "Решение прямой задачи методом перебора крайних точек:" << endl;
+	cout << "Оптимальное значение: " << -res << endl;
+	cout << "Оптимальная точка: " << endl;
 	for (auto temp : Xtreme)
 		cout << temp << "\t";
 	cout << endl << endl << endl << endl << endl;
 
 
 
-	// РќРђР™Р”Р•Рњ Р Р•РЁР•РќРР• Р”Р’РћР™РЎРўР’Р•РќРќРћР™ Р—РђР”РђР§Р Р§Р•Р Р•Р— Р Р•РЁР•РќРР• РџР РЇРњРћР™
+	// НАЙДЕМ РЕШЕНИЕ ДВОЙСТВЕННОЙ ЗАДАЧИ ЧЕРЕЗ РЕШЕНИЕ ПРЯМОЙ
 	column_t Y = SolvingDualProblem(canon_problem1, Xtreme, comb);
-	cout << "Р РµС€РµРЅРёРµ РґРІРѕР№СЃС‚РІРµРЅРЅРѕР№ Р·Р°РґР°С‡Рё, РЅР°Р№РґРµРЅРЅРѕРµ С‡РµСЂРµР· СЂРµС€РµРЅРёРµ РїСЂСЏРјРѕР№ Р·Р°РґР°С‡Рё: " << endl;
+	cout << "Решение двойственной задачи, найденное через решение прямой задачи: " << endl;
 	for (auto temp : Y)
 		cout << fix(temp, 6) << "\t";
 	cout << endl << endl;
 	double temp = 0;
 	for (int i = 0; i < b.size(); ++i)
 		temp += b[i] * Y[i];
-	cout << "Р—РЅР°С‡РµРЅРёРµ С„СѓРЅРєС†РёРё С†РµР»Рё РґРІРѕР№СЃС‚РІРµРЅРЅРѕР№ Р·Р°РґР°С‡Рё: " << -temp << endl << endl << endl << endl;
+	cout << "Значение функции цели двойственной задачи: " << -temp << endl << endl << endl << endl;
 
 
 	
-	// РџРћР›РЈР§РРўР¬ Р”Р’РћР™РЎРўР’Р•РќРќРЈР® Р—РђР”РђР§РЈ Р’ РћР‘Р©Р•Рњ Р’РР”Р•
+	// ПОЛУЧИТЬ ДВОЙСТВЕННУЮ ЗАДАЧУ В ОБЩЕМ ВИДЕ
 	general_problem_t dual_problem = GetDualLinearProblem(problem);
 	tie(A, b, c, M1, N1) = dual_problem;
-	cout << "Р”РІРѕР№СЃС‚РІРµРЅРЅР°СЏ Р·Р°РґР°С‡Р° Рє РѕР±С‰РµР№ Р·Р°РґР°С‡Рµ Р›Рџ:" << endl << "РњР°С‚СЂРёС†Р° РєРѕСЌС„С„РёС†РёРµРЅС‚РѕРІ:" << endl;
+	cout << "Двойственная задача к общей задаче ЛП:" << endl << "Матрица коэффициентов:" << endl;
 	for (int i = 0; i < M1; ++i) {
 		for (int j = 0; j < A.size(); ++j) {
 			cout << A[j][i] << "\t";
@@ -170,20 +170,20 @@ int main(void) {
 		cout << "=\t" << b[i];
 		cout << endl;
 	}
-	cout << endl << "РљСЂРёС‚РµСЂРёР№ РєР°С‡РµСЃС‚РІР°:" << endl;
+	cout << endl << "Критерий качества:" << endl;
 	for (auto temp : c) {
 		cout << temp << "\t";
 	}
-	cout << endl << "РќРµРѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹ РїРµСЂРІС‹Рµ " << N1 << " РїРµСЂРµРј." << endl << endl << endl << endl << endl;
+	cout << endl << "Неотрицательны первые " << N1 << " перем." << endl << endl << endl << endl << endl;
 
 
 
-	// РџРћР›РЈР§РР›Р Р Р•РЁР•РќРР• Р”Р’РћР™РЎРўР’Р•РќРќРћР™ Р—РђР”РђР§Р РњР•РўРћР”РћРњ РџР•Р Р•Р‘РћР Рђ РљР РђР™РќРРҐ РўРћР§Р•Рљ
+	// ПОЛУЧИЛИ РЕШЕНИЕ ДВОЙСТВЕННОЙ ЗАДАЧИ МЕТОДОМ ПЕРЕБОРА КРАЙНИХ ТОЧЕК
 	canon_problem_t canon_dual_problem = ConvertGeneralToCanon(dual_problem);
 	tie(Xtreme, res, comb) = IteratingThroughExtremePoints(canon_dual_problem);
-	cout << "Р РµС€РµРЅРёРµ РґРІРѕР№СЃС‚РІРµРЅРЅРѕР№ Р·Р°РґР°С‡Рё РјРµС‚РѕРґРѕРј РїРµСЂРµР±РѕСЂР° РєСЂР°Р№РЅРёС… С‚РѕС‡РµРє:" << endl;
-	cout << "РћРїС‚РёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ: " << res << endl;
-	cout << "РћРїС‚РёРјР°Р»СЊРЅР°СЏ С‚РѕС‡РєР°: " << endl;
+	cout << "Решение двойственной задачи методом перебора крайних точек:" << endl;
+	cout << "Оптимальное значение: " << res << endl;
+	cout << "Оптимальная точка: " << endl;
 	for (auto temp : Xtreme)
 		cout << temp << "\t";
 	cout << endl;
@@ -196,19 +196,19 @@ int main(void) {
 	tie(opt_value, X, Y, basis) = SolveProblemWithSimplexMethod(canon_problem);
 
 
-	cout << "РћРїС‚РёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С„СѓРЅРєС†РёРё С†РµР»Рё: " << opt_value << endl;
-	cout << "РћРїС‚РёРјР°Р»СЊРЅС‹Р№ РІРµРєС‚РѕСЂ: " << endl;
+	cout << "Оптимальное значение функции цели: " << opt_value << endl;
+	cout << "Оптимальный вектор: " << endl;
 	for (auto temp : X)
 		cout << temp << "\t";
 	cout << endl;
-	cout << "Р‘Р°Р·РёСЃРЅС‹Рµ РІРµРєС‚РѕСЂР°: " << endl;
+	cout << "Базисные вектора: " << endl;
 	for (int j = 0; j < basis[0].size(); ++j) {
 		for (int i = 0; i < basis.size(); ++j)
 			cout << basis[i][j] << "\t";
 		cout << endl;
 	}
 	cout << endl;
-	cout << "Р”РІРѕР№СЃС‚РІРµРЅРЅС‹Р№ РІРµРєС‚РѕСЂ: " << endl;
+	cout << "Двойственный вектор: " << endl;
 	for (auto temp : Y)
 		cout << temp << "\t";
 	cout << endl;

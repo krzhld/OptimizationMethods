@@ -16,7 +16,7 @@ void CalculateNextSupportVector(comb_t& Nk_indexes, comb_t& Nk_plus_indexes, col
 			}
 		}
 	}
-	// считаем x_{k+1} = x_k - \theta * u_k
+	// СЃС‡РёС‚Р°РµРј x_{k+1} = x_k - \theta * u_k
 	for (int i = 0; i < N_number; ++i) {
 		cur_X[i] = cur_X[i] - theta * u_k[i];
 	}
@@ -28,7 +28,7 @@ void CalculateNextSupportVector(comb_t& Nk_indexes, comb_t& Nk_plus_indexes, col
 		}
 	}
 	sort(Nk_indexes.begin(), Nk_indexes.end());
-	// обновляем Nk_plus_indexes
+	// РѕР±РЅРѕРІР»СЏРµРј Nk_plus_indexes
 	Nk_plus_indexes.clear();
 	for (int i = 0; i < cur_X.size(); ++i) {
 		if (cur_X[i] > 0)
@@ -66,36 +66,36 @@ void NormalizeVector(column_t& X) {
 	}
 }
 
-// Nk_indexes - индексы базисных столбцов
+// Nk_indexes - РёРЅРґРµРєСЃС‹ Р±Р°Р·РёСЃРЅС‹С… СЃС‚РѕР»Р±С†РѕРІ
 SimplexState IterSimplex(matrix_t& main_A, comb_t& Nk_indexes, column_t& main_C, column_t& cur_X, column_t& cur_Y) {
 	
-	/*cout << endl << "Итерация:" << endl;
-	cout << "Индексы базиса: ";
+	cout << endl << "РС‚РµСЂР°С†РёСЏ:" << endl;
+	cout << "РРЅРґРµРєСЃС‹ Р±Р°Р·РёСЃР°: ";
 	for (auto temp : Nk_indexes)
 		cout << temp << " ";
-	cout << endl << "Текущий x: ";
+	cout << endl << "РўРµРєСѓС‰РёР№ x: ";
 	for (auto temp : cur_X)
 		cout << temp << " ";
-	cout << endl << "Текущий y: ";
+	cout << endl << "РўРµРєСѓС‰РёР№ y: ";
 	for (auto temp : cur_Y)
 		cout << temp << " ";
-	cout << endl;*/
+	cout << endl;
 
 	int M_number = main_A.size();
 	int N_number = main_C.size();
 
-	// инициализация буферной матрицы для нахождения опорного вектора
+	// РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ Р±СѓС„РµСЂРЅРѕР№ РјР°С‚СЂРёС†С‹ РґР»СЏ РЅР°С…РѕР¶РґРµРЅРёСЏ РѕРїРѕСЂРЅРѕРіРѕ РІРµРєС‚РѕСЂР°
 	matrix_t A_M_Nk(M_number);
 	for (int i = 0; i < M_number; ++i)
 		A_M_Nk[i].resize(M_number);
 
-	// формируем набор индексов N+ 
+	// С„РѕСЂРјРёСЂСѓРµРј РЅР°Р±РѕСЂ РёРЅРґРµРєСЃРѕРІ N+ 
 	vector<int> Nk_plus_indexes;
 	GetNkPlus(Nk_plus_indexes, cur_X);
 
 	GetCurMatrix(main_A, A_M_Nk, Nk_indexes);
 
-	// получим текущий вектор C[N_k]
+	// РїРѕР»СѓС‡РёРј С‚РµРєСѓС‰РёР№ РІРµРєС‚РѕСЂ C[N_k]
 	column_t C_Nk(M_number);
 	int i = 0;
 	for (auto temp : Nk_indexes) {
@@ -103,22 +103,22 @@ SimplexState IterSimplex(matrix_t& main_A, comb_t& Nk_indexes, column_t& main_C,
 		++i;
 	}
 
-	/* найдем y^T [M] * A[M][Nk] = c^T[M] */
-	/* для этого транспонируем матрицу
+	/* РЅР°Р№РґРµРј y^T [M] * A[M][Nk] = c^T[M] */
+	/* РґР»СЏ СЌС‚РѕРіРѕ С‚СЂР°РЅСЃРїРѕРЅРёСЂСѓРµРј РјР°С‚СЂРёС†Сѓ
 	   A[Nk][M] * y[M] = c[M]	*/
 	TransposeQuadMatrix(A_M_Nk);
-	// и решим СЛАУ методом вращения
+	// Рё СЂРµС€РёРј РЎР›РђРЈ РјРµС‚РѕРґРѕРј РІСЂР°С‰РµРЅРёСЏ
 	cur_Y = RotationMethod(A_M_Nk, C_Nk);
 	NormalizeVector(cur_Y);
 
-	// вернем матрицу к исходному состоянию
+	// РІРµСЂРЅРµРј РјР°С‚СЂРёС†Сѓ Рє РёСЃС…РѕРґРЅРѕРјСѓ СЃРѕСЃС‚РѕСЏРЅРёСЋ
 	TransposeQuadMatrix(A_M_Nk);
 
-	// сформируем массив индексов L_k 
+	// СЃС„РѕСЂРјРёСЂСѓРµРј РјР°СЃСЃРёРІ РёРЅРґРµРєСЃРѕРІ L_k 
 	comb_t L_k;
 	GetLk(L_k, Nk_indexes, N_number);
 
-	// получим d_k[L_k]
+	// РїРѕР»СѓС‡РёРј d_k[L_k]
 	column_t d_k(L_k.size());
 	i = 0;
 	double cur_sum = 0;
@@ -132,14 +132,14 @@ SimplexState IterSimplex(matrix_t& main_A, comb_t& Nk_indexes, column_t& main_C,
 	}
 	NormalizeVector(d_k);
 
-	// если d_k не отрицательно, то выполнены н. и д. условия оптимальности, можем выдавать оптимальное значение
+	// РµСЃР»Рё d_k РЅРµ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅРѕ, С‚Рѕ РІС‹РїРѕР»РЅРµРЅС‹ РЅ. Рё Рґ. СѓСЃР»РѕРІРёСЏ РѕРїС‚РёРјР°Р»СЊРЅРѕСЃС‚Рё, РјРѕР¶РµРј РІС‹РґР°РІР°С‚СЊ РѕРїС‚РёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ
 	if (NonNegativityOfVector(d_k)) {
 		FreeMatrix(A_M_Nk);
 		return SimplexState::OPTIMAL;
 	}	
 
-	/* если нет, то начинаем строить u_k[N] */
-	// найдем j_k
+	/* РµСЃР»Рё РЅРµС‚, С‚Рѕ РЅР°С‡РёРЅР°РµРј СЃС‚СЂРѕРёС‚СЊ u_k[N] */
+	// РЅР°Р№РґРµРј j_k
 	int j_k = -1;
 	int iter = 0;
 	for (auto temp : L_k) {
@@ -164,15 +164,15 @@ SimplexState IterSimplex(matrix_t& main_A, comb_t& Nk_indexes, column_t& main_C,
 		++i;
 	}
 	u_k[j_k - 1] = -1; // u_k[j_k] = -1
-	// u_k[L_k \ j_k] = 0 (уже занулены при инициализации)
+	// u_k[L_k \ j_k] = 0 (СѓР¶Рµ Р·Р°РЅСѓР»РµРЅС‹ РїСЂРё РёРЅРёС†РёР°Р»РёР·Р°С†РёРё)
 
-	// если u_k не положительно, то функция не ограничена
+	// РµСЃР»Рё u_k РЅРµ РїРѕР»РѕР¶РёС‚РµР»СЊРЅРѕ, С‚Рѕ С„СѓРЅРєС†РёСЏ РЅРµ РѕРіСЂР°РЅРёС‡РµРЅР°
 	if (NonPositivityOfVector(u_k))
 		return SimplexState::UNLIMITED;
 
 	bool is_cur_X_supported = true;
 
-	/* если x_k[N] невырожденный, то существует \theta, считаем x_{k+1} и начинаем другую итерацию */
+	/* РµСЃР»Рё x_k[N] РЅРµРІС‹СЂРѕР¶РґРµРЅРЅС‹Р№, С‚Рѕ СЃСѓС‰РµСЃС‚РІСѓРµС‚ \theta, СЃС‡РёС‚Р°РµРј x_{k+1} Рё РЅР°С‡РёРЅР°РµРј РґСЂСѓРіСѓСЋ РёС‚РµСЂР°С†РёСЋ */
 	if (Nk_indexes.size() == Nk_plus_indexes.size()) {
 		CalculateNextSupportVector(Nk_indexes, Nk_plus_indexes, u_k, cur_X, N_number, j_k);
 		NormalizeVector(cur_X);
@@ -181,8 +181,8 @@ SimplexState IterSimplex(matrix_t& main_A, comb_t& Nk_indexes, column_t& main_C,
 			return SimplexState::NEXT;
 	}
 	else {
-		/* если вырожденный, то рассматриваем два случая */
-		// если u_k[Nk \ Nk+] <= 0,то считаем \theta
+		/* РµСЃР»Рё РІС‹СЂРѕР¶РґРµРЅРЅС‹Р№, С‚Рѕ СЂР°СЃСЃРјР°С‚СЂРёРІР°РµРј РґРІР° СЃР»СѓС‡Р°СЏ */
+		// РµСЃР»Рё u_k[Nk \ Nk+] <= 0,С‚Рѕ СЃС‡РёС‚Р°РµРј \theta
 		comb_t Nk_minus_Nk_plus = GetDifferenceSets(Nk_indexes, Nk_plus_indexes);
 		comb_t u_k_positive_indexes = GetIndexesPositiveUk(Nk_minus_Nk_plus, u_k);
 
@@ -193,7 +193,7 @@ SimplexState IterSimplex(matrix_t& main_A, comb_t& Nk_indexes, column_t& main_C,
 				return SimplexState::NEXT;		
 		}
 		else {
-			// иначе меняем базис
+			// РёРЅР°С‡Рµ РјРµРЅСЏРµРј Р±Р°Р·РёСЃ
 			int cur_m = Nk_minus_Nk_plus.size();
 			comb_t cur_diff = Nk_minus_Nk_plus;
 			comb_t cur_Nk_indexes = Nk_plus_indexes;
@@ -202,7 +202,7 @@ SimplexState IterSimplex(matrix_t& main_A, comb_t& Nk_indexes, column_t& main_C,
 			NextSetCycle(cur_diff, N_number, cur_m);
 			while (true) {
 				flag = false;
-				// проверяем: пересекается ли cur_diff и Nk+
+				// РїСЂРѕРІРµСЂСЏРµРј: РїРµСЂРµСЃРµРєР°РµС‚СЃСЏ Р»Рё cur_diff Рё Nk+
 				for (auto temp : cur_diff) {
 					if (IsNumberInCombination(temp, Nk_plus_indexes)) {
 						NextSetCycle(cur_diff, N_number, cur_m);
@@ -231,13 +231,13 @@ SimplexState IterSimplex(matrix_t& main_A, comb_t& Nk_indexes, column_t& main_C,
 }
 
 tuple<double, column_t, column_t, comb_t> SimplexMethod(canon_problem_t& problem, column_t& cur_X, comb_t& basis) {
-	// распаковка кортежа
+	// СЂР°СЃРїР°РєРѕРІРєР° РєРѕСЂС‚РµР¶Р°
 	matrix_t matrix_A0;
 	column_t column_B;
 	column_t column_C;
 	tie(matrix_A0, column_B, column_C) = problem;
 
-	// транспонирование матрицы для удобства
+	// С‚СЂР°РЅСЃРїРѕРЅРёСЂРѕРІР°РЅРёРµ РјР°С‚СЂРёС†С‹ РґР»СЏ СѓРґРѕР±СЃС‚РІР°
 	int N = matrix_A0.size();
 	int M = matrix_A0[0].size();
 	matrix_t matrix_A(M);
@@ -251,9 +251,9 @@ tuple<double, column_t, column_t, comb_t> SimplexMethod(canon_problem_t& problem
 		matrix_A0[i].clear();
 	matrix_A0.clear();
 
-	// проверка: является ли матрица полноранговой
+	// РїСЂРѕРІРµСЂРєР°: СЏРІР»СЏРµС‚СЃСЏ Р»Рё РјР°С‚СЂРёС†Р° РїРѕР»РЅРѕСЂР°РЅРіРѕРІРѕР№
 	if (!IsFullRankMatrix(matrix_A)) {
-		cout << "Матрица ограничений не является полноранговой." << endl << "Досрочное завершение работы." << endl;
+		cout << "РњР°С‚СЂРёС†Р° РѕРіСЂР°РЅРёС‡РµРЅРёР№ РЅРµ СЏРІР»СЏРµС‚СЃСЏ РїРѕР»РЅРѕСЂР°РЅРіРѕРІРѕР№." << endl << "Р”РѕСЃСЂРѕС‡РЅРѕРµ Р·Р°РІРµСЂС€РµРЅРёРµ СЂР°Р±РѕС‚С‹." << endl;
 		exit(-1);
 	}
 
@@ -261,15 +261,15 @@ tuple<double, column_t, column_t, comb_t> SimplexMethod(canon_problem_t& problem
 
 	SimplexState state = SimplexState::NEXT;
 	while (true) {
-		// переходим к следующей итерации (смена опорного вектора или опорного базиса)
+		// РїРµСЂРµС…РѕРґРёРј Рє СЃР»РµРґСѓСЋС‰РµР№ РёС‚РµСЂР°С†РёРё (СЃРјРµРЅР° РѕРїРѕСЂРЅРѕРіРѕ РІРµРєС‚РѕСЂР° РёР»Рё РѕРїРѕСЂРЅРѕРіРѕ Р±Р°Р·РёСЃР°)
 		if (state == SimplexState::NEXT)
 			state = IterSimplex(matrix_A, basis, column_C, cur_X, cur_Y);
 
-		// если функция не ограничена, то выводим -"бесконечность"
+		// РµСЃР»Рё С„СѓРЅРєС†РёСЏ РЅРµ РѕРіСЂР°РЅРёС‡РµРЅР°, С‚Рѕ РІС‹РІРѕРґРёРј -"Р±РµСЃРєРѕРЅРµС‡РЅРѕСЃС‚СЊ"
 		else if (state == SimplexState::UNLIMITED)
 			return make_tuple(-DBL_MAX, cur_X, cur_Y, basis);
 
-		// если нашли оптимальное решение, то выводим значение функции цели
+		// РµСЃР»Рё РЅР°С€Р»Рё РѕРїС‚РёРјР°Р»СЊРЅРѕРµ СЂРµС€РµРЅРёРµ, С‚Рѕ РІС‹РІРѕРґРёРј Р·РЅР°С‡РµРЅРёРµ С„СѓРЅРєС†РёРё С†РµР»Рё
 		else if (state == SimplexState::OPTIMAL) {
 			double result = 0;
 			for (int i = 0; i < N; ++i)
@@ -280,13 +280,13 @@ tuple<double, column_t, column_t, comb_t> SimplexMethod(canon_problem_t& problem
 }
 
 tuple<column_t, comb_t> GetInitialApprox(canon_problem_t& problem) {
-	// распаковка кортежа
+	// СЂР°СЃРїР°РєРѕРІРєР° РєРѕСЂС‚РµР¶Р°
 	matrix_t matrix_A;
 	column_t column_B;
 	column_t column_C;
 	tie(matrix_A, column_B, column_C) = problem;
 
-	/* формулируем критерий качества */
+	/* С„РѕСЂРјСѓР»РёСЂСѓРµРј РєСЂРёС‚РµСЂРёР№ РєР°С‡РµСЃС‚РІР° */
 	int b_size = column_B.size();
 	int c_size = column_C.size();
 	column_C.resize(b_size + c_size);
@@ -295,46 +295,46 @@ tuple<column_t, comb_t> GetInitialApprox(canon_problem_t& problem) {
 	for (int i = c_size; i < b_size + c_size; ++i)
 		column_C[i] = 1;
 
-	/* расширяем матрицу A */
+	/* СЂР°СЃС€РёСЂСЏРµРј РјР°С‚СЂРёС†Сѓ A */
 	matrix_A.resize(matrix_A.size() + b_size);
 	for (int i = matrix_A.size() - b_size; i < matrix_A.size(); ++i) {
 		matrix_A[i].resize(b_size);
 		matrix_A[i][i - (matrix_A.size() - b_size)] = 1;
 	}
 
-	/* после преобразовании задачи у нас b[M] >= 0 (см. ConvertGeneralToCanon) */
+	/* РїРѕСЃР»Рµ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРё Р·Р°РґР°С‡Рё Сѓ РЅР°СЃ b[M] >= 0 (СЃРј. ConvertGeneralToCanon) */
 
-	/* строим начальное приближение */
+	/* СЃС‚СЂРѕРёРј РЅР°С‡Р°Р»СЊРЅРѕРµ РїСЂРёР±Р»РёР¶РµРЅРёРµ */
 	column_t first_approx(column_C.size());
 	for (int i = 0; i < c_size; ++i)
 		first_approx[i] = 0;
 	for (int i = c_size; i < b_size + c_size; ++i)
 		first_approx[i] = column_B[i - c_size];
 
-	/* вводим искусственный базис (множество индексов столбцов единичной матрицы) */
+	/* РІРІРѕРґРёРј РёСЃРєСѓСЃСЃС‚РІРµРЅРЅС‹Р№ Р±Р°Р·РёСЃ (РјРЅРѕР¶РµСЃС‚РІРѕ РёРЅРґРµРєСЃРѕРІ СЃС‚РѕР»Р±С†РѕРІ РµРґРёРЅРёС‡РЅРѕР№ РјР°С‚СЂРёС†С‹) */
 	comb_t basis;
 	for (int i = c_size; i < c_size + b_size; ++i)
 		basis.push_back(i + 1);
 
 	canon_problem_t help_problem = make_tuple(matrix_A, column_B, column_C);
 
-	cout << "Начало поиска начального приближения методом искусственного базиса." << endl;
+	cout << "РќР°С‡Р°Р»Рѕ РїРѕРёСЃРєР° РЅР°С‡Р°Р»СЊРЅРѕРіРѕ РїСЂРёР±Р»РёР¶РµРЅРёСЏ РјРµС‚РѕРґРѕРј РёСЃРєСѓСЃСЃС‚РІРµРЅРЅРѕРіРѕ Р±Р°Р·РёСЃР°." << endl;
 
 	SimplexMethod(help_problem, first_approx, basis);
 
-	cout << endl << "Конец поиска начального приближения методом искусственного базиса." << endl;
+	cout << endl << "РљРѕРЅРµС† РїРѕРёСЃРєР° РЅР°С‡Р°Р»СЊРЅРѕРіРѕ РїСЂРёР±Р»РёР¶РµРЅРёСЏ РјРµС‚РѕРґРѕРј РёСЃРєСѓСЃСЃС‚РІРµРЅРЅРѕРіРѕ Р±Р°Р·РёСЃР°." << endl;
 
-	/* если хотя бы одна компонента y[m] положительна, то исходная задача не имеет ни одной допустимой точки */
+	/* РµСЃР»Рё С…РѕС‚СЏ Р±С‹ РѕРґРЅР° РєРѕРјРїРѕРЅРµРЅС‚Р° y[m] РїРѕР»РѕР¶РёС‚РµР»СЊРЅР°, С‚Рѕ РёСЃС…РѕРґРЅР°СЏ Р·Р°РґР°С‡Р° РЅРµ РёРјРµРµС‚ РЅРё РѕРґРЅРѕР№ РґРѕРїСѓСЃС‚РёРјРѕР№ С‚РѕС‡РєРё */
 	for (int i = c_size; i < c_size + b_size; ++i) {
 		if (first_approx[i] > 0) {
-			cout << "Исходная задача не имеет ни одной допустимой точки." << endl << "Досрочное завершение работы." << endl;
+			cout << "РСЃС…РѕРґРЅР°СЏ Р·Р°РґР°С‡Р° РЅРµ РёРјРµРµС‚ РЅРё РѕРґРЅРѕР№ РґРѕРїСѓСЃС‚РёРјРѕР№ С‚РѕС‡РєРё." << endl << "Р”РѕСЃСЂРѕС‡РЅРѕРµ Р·Р°РІРµСЂС€РµРЅРёРµ СЂР°Р±РѕС‚С‹." << endl;
 			exit(-1);
 		}
 	}
-	/* вычленяем из вектора x[N] - опорный вектор для исходной задачи */
+	/* РІС‹С‡Р»РµРЅСЏРµРј РёР· РІРµРєС‚РѕСЂР° x[N] - РѕРїРѕСЂРЅС‹Р№ РІРµРєС‚РѕСЂ РґР»СЏ РёСЃС…РѕРґРЅРѕР№ Р·Р°РґР°С‡Рё */
 	first_approx.resize(c_size);
 
-	// Начальное приближение методом искусственного базиса было найдено
+	// РќР°С‡Р°Р»СЊРЅРѕРµ РїСЂРёР±Р»РёР¶РµРЅРёРµ РјРµС‚РѕРґРѕРј РёСЃРєСѓСЃСЃС‚РІРµРЅРЅРѕРіРѕ Р±Р°Р·РёСЃР° Р±С‹Р»Рѕ РЅР°Р№РґРµРЅРѕ
 
 	return make_tuple(first_approx, basis);
 }
