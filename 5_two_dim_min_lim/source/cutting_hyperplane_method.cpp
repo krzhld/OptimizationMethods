@@ -103,7 +103,7 @@ column_t CuttingHyperplaneMethod(Task& t, double eps) {
 	tie(xk, yk, _) = SolvingLinearProblemInFirstIter(t); //ищем решение прямой и двойственной задачи на первой итерации без использования решения двойственной задачи с прошлой итерации
 	_.clear();
 
-	// 
+	// Формируем базис для двойственной задачи
 	basis.push_back(1);
 	basis.push_back(3);
 	basis.push_back(6);
@@ -117,7 +117,6 @@ column_t CuttingHyperplaneMethod(Task& t, double eps) {
 		yk.push_back(0);
 		solving_linear_problem_t solvingLinearProblem = SolvingLinearProblem(t, Sk, yk, basis); //ищем решение прямой и двойственной задачи ЛП
 
-		// column_t xk, yk;
 		tie(yk, xk, basis) = solvingLinearProblem; 
 
 	} while (Norm(DiffVector(xk, xprev)) > eps);
