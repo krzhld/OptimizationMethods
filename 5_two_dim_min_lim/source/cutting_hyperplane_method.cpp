@@ -8,7 +8,7 @@ solving_linear_problem_t SolvingLinearProblemInFirstIter(Task& t) {
 	column_t b;
 	tie(A0, b) = polyhedron;
 	
-	column_t c = { 0, 0, 0, 0, 1, -1 };
+	column_t c = { 0, 0, 0, 0, -1, 1 };
 	int l = b.size();
 
 	for (int i = 0; i < 3; i++) {
@@ -39,12 +39,13 @@ solving_linear_problem_t SolvingLinearProblemInFirstIter(Task& t) {
 		}
 	}
 	A0.clear();
+
 	canon_problem_t canon_problem = make_tuple(A, b, c);
 
 	tie(temp, x, y, basis) = SolveProblemWithSimplexMethod(canon_problem);
 	
 	for (int i = 0; i < 3; i++) {
-		x[i] = x[2 * i] + x[2 * i + 1];
+		x[i] = x[i] - x[i + 3];
 	}
 	x.resize(3);
 
@@ -56,16 +57,13 @@ solving_linear_problem_t SolvingLinearProblem(Task& t, polyhedron_t& Sk, column_
 	matrix_t A;
 	column_t b;
 
-	for (int i = 0; i < b.size(); i++)
-		b[i] *= -1;
-
 	tie(A, b) = Sk;
 	column_t c = { 0, 0, -1 };
 
 	canon_problem = make_tuple(A, c, b);
 
 	column_t x, y;
-	int res;
+	double res;
 	tie(res, y, x, basis) = SimplexMethod(canon_problem, yk, basis);
 
 	return make_tuple(y, x, basis);
@@ -98,27 +96,17 @@ polyhedron_t AddCuttingHiperplaneInPolyhedron(polyhedron_t& Sk, hyperplane_t& h)
 }
 
 
-solving_t CuttingHyperplaneMethod(Task& t, double eps) {
+column_t CuttingHyperplaneMethod(Task& t, double eps) {
 	column_t xprev, xk, yk;
 	comb_t basis, _;
 	polyhedron_t Sk = t.GetS0(); //первоначальное множество, содержащее исходное множество точек
 	tie(xk, yk, _) = SolvingLinearProblemInFirstIter(t); //ищем решение прямой и двойственной задачи на первой итерации без использования решения двойственной задачи с прошлой итерации
 	_.clear();
 
-	/*for (int i = 0; i < yk.size(); i++) {
-		if (yk[i] != 0)
-			basis.push_back(i + 1);
-	}
-	int temp = 1;
-	while (basis.size() < xk.size()) {
-		if (IsNumberInCombination(temp, basis))
-			temp++;
-		basis.push_back(temp);
-	}
-	sort(basis.begin(), basis.end());*/
-	basis.push_back(2);
-	basis.push_back(4);
-	basis.push_back(5);
+	// 
+	basis.push_back(1);
+	basis.push_back(3);
+	basis.push_back(6);
 
 	do {
 		xprev = xk;
@@ -134,8 +122,5 @@ solving_t CuttingHyperplaneMethod(Task& t, double eps) {
 
 	} while (Norm(DiffVector(xk, xprev)) > eps);
 
-	column_t result_column = xk;
-	double result = t.MinFunc(result_column);
-
-	return make_tuple(result_column, result);
+	return xk;
 }

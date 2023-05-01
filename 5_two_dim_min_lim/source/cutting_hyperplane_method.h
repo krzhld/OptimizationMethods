@@ -14,9 +14,6 @@
 
 using namespace std;
 
-/*решение задачи*/
-typedef tuple<column_t, double> solving_t;
-
 /*кортеж из решений прямой и двойственной задачи соответственно*/
 typedef tuple<column_t, column_t, comb_t> solving_linear_problem_t;
 
@@ -24,7 +21,7 @@ typedef tuple<column_t, column_t, comb_t> solving_linear_problem_t;
 * вход: вектор - начальное приближение, кортеж - первоначальное многогранное множество, данные исходной задачи, вещественное число - точность решения
 * выход: кортеж - решение задачи
 */
-solving_t CuttingHyperplaneMethod(Task& t, double eps);
+column_t CuttingHyperplaneMethod(Task& t, double eps);
 
 /*Построение отсекающей гиперплоскости на данной итерации
 * Вход: текущее приближение, данные задачи

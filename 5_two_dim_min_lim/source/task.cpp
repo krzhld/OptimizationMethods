@@ -9,8 +9,8 @@ double Task::MinFunc(column_t x) {
 double Task::Limit(column_t x) {
 	vector<double> limits;
 
-	limits.push_back(4 * x[0] + 5 * x[1] + 2 * PI);
-	limits.push_back(-4 * x[0] - 5 * x[1] - 3 * PI);
+	limits.push_back(4 * x[0] + 5 * x[1] + 7);
+	limits.push_back(-4 * x[0] - 5 * x[1] - 9);
 	limits.push_back(2 * (x[0] + 2) * (x[0] + 2) - x[1] - 2);
 	limits.push_back(Phi0(x) - x[2]);
 	
@@ -26,7 +26,7 @@ double Task::Limit(column_t x) {
 
 column_t Task::SubgradientLim(column_t x) {
 	int index = Index(x);
-	int xs, ys, zs;
+	double xs, ys, zs;
 	if (index == 0) {
 		xs = 4;
 		ys = 5;
@@ -65,13 +65,13 @@ double Task::Phi0(column_t x) {
 
 int Task::Index(column_t x) {
 	vector<double> limits;
-	limits.push_back(4 * x[0] + 5 * x[1] + 2 * PI);
-	limits.push_back(-4 * x[0] - 5 * x[1] - 3 * PI);
+	limits.push_back(4 * x[0] + 5 * x[1] + 7);
+	limits.push_back(-4 * x[0] - 5 * x[1] - 9);
 	limits.push_back(2 * (x[0] + 2) * (x[0] + 2) - x[1] - 2);
 	limits.push_back(Phi0(x) - x[2]);
 
 	int result = 0;
-	int max = limits[0];
+	double max = limits[0];
 	for (int i = 1; i < size(limits); i++) {
 		if (max < limits[i]) {
 			max = limits[i];
@@ -100,8 +100,8 @@ polyhedron_t Task::GetS0() {
 		3 * PI,
 		0,
 		6,
-		-3.4183,
-		10
+		100,
+		100
 	};
 
 	return make_tuple(A, b);

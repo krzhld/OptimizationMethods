@@ -4,9 +4,8 @@
 int main() {
 	Task t;
 	setlocale(LC_ALL, "Russian");
-	column_t x;
-	double res;
-	tie(x, res) = CuttingHyperplaneMethod(t, 0.00001);
+	double eps = 1e-3;
+	column_t x = CuttingHyperplaneMethod(t, eps);
 	cout << "Оптимальная точка: (" << x[0] << ", " << x[1] << ")" << endl;
 	cout << "Оптимальное значение: " << x[2];
 	return 0;
